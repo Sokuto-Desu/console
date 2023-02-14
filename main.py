@@ -116,12 +116,11 @@ you can use any name provided here.
 
 
 class EchoButton(discord.ui.Button):
-	def __init__(self, label, style, callback_text, ephemeral, custom_id, emoji, disabled, url=None):
+	def __init__(self, label, style, callback_text, ephemeral, emoji, disabled, url=None):
 		style = getattr(discord.ButtonStyle, style)
 		super().__init__(
 			label = label,
 			style = style,
-			custom_id = custom_id,
 			emoji = emoji,
 			disabled = disabled,
 			url = url if style == discord.ButtonStyle.link else None
@@ -174,7 +173,7 @@ def converttobuttons(buttons: str):
 		else:
 			disabled = True
 		
-		button_item = EchoButton(label, style, button_dict.get("callback"), ephemeral, str(random.randint(1, 99999999)), button_dict.get("emoji"), disabled, button_dict.get("url"))
+		button_item = EchoButton(label, style, button_dict.get("callback"), ephemeral, button_dict.get("emoji"), disabled, button_dict.get("url"))
 		
 		view.add_item(button_item)
 	
