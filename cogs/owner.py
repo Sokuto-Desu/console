@@ -16,7 +16,7 @@ class Owner(commands.Cog):
 	
 	@slash_command(guild_ids = config["devserver"])
 	async def run(self, ctx, c: Option(str, required = True, choices = ["eval", "exec"]), *, data: Option(str, required = True)):
-		if c = "eval:
+		if c = "eval":
 			try:
 				r = eval(data)
 			except:
@@ -24,7 +24,7 @@ class Owner(commands.Cog):
 			
 			await ctx.respond(f"```py\n{r}```")
 		
-		elif c == "exec:
+		elif c == "exec":
 			data = "\n" + data if not data.startswith("\n") else data
 			tabed_code = "  ".join(data.split("\n")).replace("  ", "\n  ")
 			
