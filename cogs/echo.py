@@ -3,6 +3,7 @@ from discord import slash_command
 from discord.ext import commands
 from discord.commands import Option
 
+from core.utils import Embed
 from ast import literal_eval
 
 
@@ -152,7 +153,6 @@ you can use any name provided here.
 			embed = discord.Embed(
 				title = "echo command info.",
 				description = self.echo_docs,
-				color = 0x151515
 				)
 			
 			await ctx.delete()
