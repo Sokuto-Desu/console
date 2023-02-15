@@ -17,9 +17,9 @@ class ConsoleBot(discord.Bot):
  		)
  		
  		self.is_test = settings.config["is_test"]
- 		self.cogs = settings.cogs
+ 		self.to_load = settings.cogs
  		
- 		for cog in self.cogs:
+ 		for cog in self.to_load:
  			self.load_extension(cog)
  	
  	async def on_application_command_error(self, ctx, error):
