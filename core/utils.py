@@ -39,7 +39,6 @@ async def handle_error(ctx, error):
 		title = f"**{ctx.guild}**: **{ctx.channel}**: **{ctx.author}**",
 		description = f"```\n{traceback}```",
 		color = 0x151515
-		)
 	)
 	
 	channel = settings.config["errors_channel"]

@@ -1,2 +1,2 @@
 from .bot import ConsoleBot
-from .utils import *
+from . import utils
