@@ -1,5 +1,5 @@
 import discord
-import settings, utils
+import settings, .utils
 
 
 class ConsoleBot(commands.Bot):
