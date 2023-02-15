@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 
 import settings
 from traceback import format_exception
