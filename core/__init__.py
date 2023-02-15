@@ -1,2 +1,2 @@
 from .bot import ConsoleBot
-import ./utils
+import ../core/utils
