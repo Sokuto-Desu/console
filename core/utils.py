@@ -1,3 +1,5 @@
+import discord
+
 import settings
 from traceback import format_exception
 
