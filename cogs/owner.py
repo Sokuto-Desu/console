@@ -34,7 +34,7 @@ class Owner(commands.Cog):
 	
 	
 	@slash_command(guild_ids=config["devserver"])
-	async def shutdown(ctx):
+	async def shutdown(self, ctx):
 		await ctx.respond("`closing connection...`")
 		await bot.close()
 

@@ -33,5 +33,5 @@ class ConsoleBot(discord.Bot):
  	
  	def run(self):
  		if self.is_test:
- 			return super().run(settings.config["token"])
- 		super().run(settings.config["test_token"])
+ 			return super().run(settings.config["test_token"])
+ 		super().run(settings.config["token"])
