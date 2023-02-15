@@ -4,7 +4,8 @@ from traceback import format_exception
 # embed with default color 0x151515 (black)
 class Embed(discord.Embed):
 	def __init__(self, **kwargs):
-		super().__init__(color = 0x151515, kwargs)
+		super().__init__(color = 0x151515)
+		super().__init__(kwargs)
 
 
 # "closes" window (waits time and deletes message)
