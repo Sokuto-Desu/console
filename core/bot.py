@@ -1,6 +1,6 @@
 import discord
 import settings
-from utils import handle_error
+from .utils import handle_error
 
 
 class ConsoleBot(commands.Bot):
