@@ -28,7 +28,7 @@ class ConsoleBot(discord.Bot):
  	
  	async def on_ready(self):
  		print("-"*25)
- 		print(f"Logged in as {self.user} (test mode: {self.is_test.lower()})")
+ 		print(f"Logged in as {self.user} (test mode: {str(self.is_test).lower()})")
  		print("-"*25)
  	
  	def run(self):
