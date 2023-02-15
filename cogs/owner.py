@@ -16,7 +16,7 @@ class Owner(commands.Cog):
 	
 	@slash_command(guild_ids = config["devserver"])
 	async def run(self, ctx, c: Option(str, required = True, choices = ["eval", "exec"]), *, data: Option(str, required = True)):
-		if c = "eval":
+		if c == "eval":
 			try:
 				r = eval(data)
 			except:
