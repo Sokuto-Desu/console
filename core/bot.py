@@ -1,5 +1,6 @@
 import discord
-import settings, utils
+import settings
+from . import utils
 
 
 class ConsoleBot(commands.Bot):
