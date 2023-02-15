@@ -149,8 +149,8 @@ you can use any name provided here.
 		
 		if info:
 			embed = discord.Embed(
-				title = "echo command info."
-				description = self.echo_docs
+				title = "echo command info.",
+				description = self.echo_docs,
 				color = 0x151515
 				)
 			
