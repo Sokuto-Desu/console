@@ -23,7 +23,7 @@ class ConsoleBot(discord.Bot):
  			self.load_extension(cog)
  	
  	async def on_application_command_error(self, ctx, error):
- 		await handle_error(ctx, error)
+ 		await handle_error(self.bot, ctx, error)
  	
  	
  	async def on_ready(self):

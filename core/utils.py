@@ -32,7 +32,7 @@ async def convert_time(time):
 
 
 # every command error goes here (see on_application_command_error event in bot.py)
-async def handle_error(ctx, error):
+async def handle_error(bot, ctx, error):
 	if isinstance(error, commands.MissingPermissions):
 		return await ctx.respond(f"`error. {error.message.lower()}`")
 	elif isinstance(error, commands.UserInputError):
@@ -45,5 +45,5 @@ async def handle_error(ctx, error):
 		color = 0x151515
 	)
 	
-	channel = settings.config["devserver"][0].get_channel(settings.config["errors_channel"])
+	channel = bot.get_guild(settings.config["devserver"][0]).get_channel(settings.config["errors_channel"])
 	message = await channel.send(embed = embed)
