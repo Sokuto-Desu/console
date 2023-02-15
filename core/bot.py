@@ -1,6 +1,6 @@
 import discord
 import settings
-from . import utils
+from utils import handle_error
 
 
 class ConsoleBot(commands.Bot):
@@ -22,7 +22,7 @@ class ConsoleBot(commands.Bot):
 			self.load_extension(cog)
 	
 	async def on_application_command_error(self, ctx, error):
-		await utils.handle_error(ctx, error)
+		await handle_error(ctx, error)
 	
 	
 	async def on_ready(self):
