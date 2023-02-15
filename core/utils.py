@@ -45,5 +45,5 @@ async def handle_error(ctx, error):
 		color = 0x151515
 	)
 	
-	channel = settings.config["errors_channel"]
+	channel = settings.config["devserver"][0].get_channel(settings.config["errors_channel"])
 	message = await channel.send(embed = embed)
