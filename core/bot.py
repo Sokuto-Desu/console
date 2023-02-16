@@ -1,7 +1,10 @@
-import discord
-
 import settings
+from sys import argv
 from .utils import Embed
+from traceback import format_exception
+
+import discord
+from discord.ext import commands
 
 
 class ConsoleBot(discord.Bot):
@@ -40,11 +43,14 @@ class ConsoleBot(discord.Bot):
  		channel = self.get_guild(settings.devserver[0]).get_channel(settings.errors_channel)
  		await channel.send(embed = embed)
  	
- 	
  	async def on_ready(self):
  		print("-"*25)
  		print(f"Logged in as {self.user} (test mode: {str(self.is_test).lower()})")
  		print("-"*25)
+ 		
+ 		if "-tb" in argv:
+ 			await asyncio.sleep(2)
+ 	
  	
  	def run(self):
  		if self.is_test:

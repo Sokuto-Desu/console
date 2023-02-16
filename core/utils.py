@@ -1,8 +1,5 @@
 import settings
-from traceback import format_exception
-
 import discord
-from discord.ext import commands
 
 
 async def close(message: discord.Message, time: int = 5):
