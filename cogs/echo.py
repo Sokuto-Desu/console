@@ -153,7 +153,7 @@ class Echo(commands.Cog):
 		if info:
 			embed = Embed.create(
 				title = "echo command info.",
-				description = self.__docs__.replace("	", "")
+				description = self.__doc__.replace("	", "")
 				)
 			
 			await ctx.delete()
