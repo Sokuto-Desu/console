@@ -7,7 +7,7 @@ load_dotenv()
 
 owners = [898610134589243442]
 
-devserver = [922482556224548975, 942390181984608327]
+devserver = 942390181984608327
 
 activity = "/help"
 

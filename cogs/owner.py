@@ -13,7 +13,7 @@ class Owner(commands.Cog):
 		return self.bot.is_owner(ctx.author)
 	
 	
-	@slash_command(guild_ids = settings.devserver)
+	@slash_command(guild_ids = [settings.devserver])
 	@option("mode", required = True, choices = ["eval", "exec"])
 	@option("data", required = True)
 	async def run(self, ctx, mode: str, *, data: str):
@@ -34,7 +34,7 @@ class Owner(commands.Cog):
 			return exec(f"async def __ex():\n	try:\n{tabed_code}\n	except Exception as e:\n		await ctx.respond(str(e)[0:1995])\n_running_loop.create_task(__ex())", globals().update({"bot": bot, "ctx": ctx}))
 	
 	
-	@slash_command(guild_ids = settings.devserver)
+	@slash_command(guild_ids = [settings.devserver])
 	async def shutdown(self, ctx):
 		await ctx.respond("`closing connection...`")
 		await bot.close()
