@@ -159,16 +159,16 @@ class Echo(commands.Cog):
 			await ctx.delete()
 			return await ctx.channel.send(embed = embed)
 		
+		fields_list = []
 		if fields:
-			fields_list = []
 			fields = fields.split("-add")[1:] # [1:] to remove empty string
 			for field in fields:
 				field = field.split("//") # splits to [name, value]
-				fields_list += {
-					"name": field[0],
-					"value": field[1],
-					"inline": False
-				}
+				fields_list.append({
+						"name": field[0],
+						"value": field[1],
+						"inline": False
+					})
 		
 		
 		if any([title, description, footer, image, thumbnail, fields]):
@@ -187,12 +187,9 @@ class Echo(commands.Cog):
 			embed = None
 		
 		
-		view = None
-		if buttons:
-			view = convert_to_buttons(buttons)
+		view = convert_to_buttons(buttons) if buttons else None
 		
 		if id != None:
-			
 			if ctx.author.guild_permissions.manage_messages:
 				try:
 					message = await ctx.channel.fetch_message(int(id))
