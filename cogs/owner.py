@@ -1,9 +1,9 @@
+import settings
+
 import discord
 from discord import slash_command
 from discord.ext import commands
 from discord.commands import Option
-
-from settings import config
 
 
 class Owner(commands.Cog):
@@ -14,9 +14,11 @@ class Owner(commands.Cog):
 		return self.bot.is_owner(ctx.author)
 	
 	
-	@slash_command(guild_ids = config["devserver"])
-	async def run(self, ctx, c: Option(str, required = True, choices = ["eval", "exec"]), *, data: Option(str, required = True)):
-		if c == "eval":
+	@slash_command(guild_ids = settings.devserver)
+	@option("mode", required = True, choices = ["eval", "exec"])
+	@option("data", required = True)
+	async def run(self, ctx, mode: str, *, data: str):
+		if mode == "eval":
 			try:
 				r = eval(data)
 			except:
@@ -24,16 +26,16 @@ class Owner(commands.Cog):
 			
 			await ctx.respond(f"```py\n{r}```")
 		
-		elif c == "exec":
+		elif mode == "exec":
 			data = "\n" + data if not data.startswith("\n") else data
 			tabed_code = "  ".join(data.split("\n")).replace("  ", "\n  ")
 			
-			clcb = asyncio.get_running_loop()
+			_running_loop = asyncio.get_running_loop()
 			
-			return exec(f"async def __ex():\n	try:\n{tabed_code}\n	except Exception as e:\n		await ctx.respond(str(e)[0:1995])\nclcb.create_task(__ex())", globals().update({"bot": bot, "ctx": ctx}))
+			return exec(f"async def __ex():\n	try:\n{tabed_code}\n	except Exception as e:\n		await ctx.respond(str(e)[0:1995])\n_running_loop.create_task(__ex())", globals().update({"bot": bot, "ctx": ctx}))
 	
 	
-	@slash_command(guild_ids = config["devserver"])
+	@slash_command(guild_ids = settings.devserver)
 	async def shutdown(self, ctx):
 		await ctx.respond("`closing connection...`")
 		await bot.close()

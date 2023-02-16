@@ -1,29 +1,44 @@
 import discord
 
 import settings
-from .utils import handle_error
+from .utils import Embed
 
 
 class ConsoleBot(discord.Bot):
  	def __init__(self):
  		super().__init__(
-#		command_prefix = settings.config["prefix"],
+#		command_prefix = settings.prefix,
  		intents = discord.Intents.all(),
  		case_insensitive = True,
  		activity = discord.Activity(
  			type = discord.ActivityType.watching,
- 			name = settings.config["activity"]
+ 			name = settings.activity
  			)
  		)
  		
- 		self.is_test = settings.config["is_test"]
+ 		self.is_test = settings.is_test
  		self.to_load = settings.cogs
  		
  		for cog in self.to_load:
  			self.load_extension(cog)
  	
+ 	
  	async def on_application_command_error(self, ctx, error):
- 		await handle_error(self, ctx, error)
+ 		if isinstance(error, commands.MissingPermissions):
+ 			return await ctx.respond(f"`error. {error.message.lower()}`")
+ 		
+ 		elif isinstance(error, commands.UserInputError):
+ 			return await ctx.respond(f"`error. incorrect argument(s). {error.message.lower()}`")
+ 		
+ 		
+ 		traceback = "".join(format_exception(type(error), error, error.__traceback__))
+ 		embed = Embed(
+ 			title = f"**{ctx.guild}**: **{ctx.channel}**: **{ctx.author}**",
+ 			description = f"```\n{traceback}```"
+ 		)
+ 		
+ 		channel = self.get_guild(settings.devserver[0]).get_channel(settings.errors_channel)
+ 		await channel.send(embed = embed)
  	
  	
  	async def on_ready(self):
@@ -33,5 +48,5 @@ class ConsoleBot(discord.Bot):
  	
  	def run(self):
  		if self.is_test:
- 			return super().run(settings.config["test_token"])
- 		super().run(settings.config["token"])
+ 			return super().run(settings.test_token)
+ 		super().run(settings.token)
