@@ -38,11 +38,11 @@ class Embed(discord.Embed):
 				for field in fields
 			]
 		
-		if parameters.get("image").get("url") is None:
+		if parameters.get("image") is None:
 			parameters.pop("image")
-		if parameters.get("thumbnail").get("url") is None:
+		if parameters.get("thumbnail") is None:
 			parameters.pop("thumbnail")
-		if parameters.get("footer").get("text") in (None, Embed.Empty):
+		if parameters.get("footer")in (None, Embed.Empty):
 			parameters.pop("footer")
 		
 		if parameters.get("title") is None:
