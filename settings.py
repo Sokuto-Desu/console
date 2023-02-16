@@ -15,7 +15,7 @@ token = os.getenv("TOKEN")
 
 test_token = os.getenv("TEST_TOKEN")
 
-is_test = True
+is_test = False
 
 errors_channel = 989094089305772042
 

@@ -137,8 +137,8 @@ class Echo(commands.Cog):
 		self,
 		ctx,
 		content: Option(str, "any text", required=False, default=None),
-		title: Option(str, "title of embed", required=False, default=""), 
-		description: Option(str, "description of embed", required=False, default=""),
+		title: Option(str, "title of embed", required=False, default=Embed.Empty), 
+		description: Option(str, "description of embed", required=False, default=Embed.Empty),
 		footer: Option(str, "footer of embed", required=False, default=Embed.Empty),
 		fields: Option(str, "-add field // value -add field // value", required=False, default=None),
 		color: Option(str, "color of embed", required=False, default=None),
@@ -150,14 +150,13 @@ class Echo(commands.Cog):
 		):
 		
 		if info:
-			embed = Embed(
+			embed = Embed.create(
 				title = "echo command info.",
 				description = self.__docs__.replace("	", "")
 				)
 			
 			await ctx.delete()
 			return await ctx.channel.send(embed = embed)
-		
 		
 		fields_list = []
 		fields = fields.split("-add")[1:] # [1:] to remove empty string
@@ -175,7 +174,7 @@ class Echo(commands.Cog):
 			random.randint(0, 255)
 		) if color == None else int(color, 16)
 		
-		embed = Embed(
+		embed = Embed.create(
 			title = title,
 			description = description,
 			color = color,
@@ -206,7 +205,7 @@ class Echo(commands.Cog):
 			return
 		
 		await ctx.delete()
-		await ctx.channel.send(content = content, embed = embed, view = view)
+		await ctx.channel.send(content = content, embed = embed if embed else None, view = view)
 
 
 

@@ -22,7 +22,8 @@ async def convert_time(time):
 
 
 class Embed(discord.Embed):
-	def __init__(self, **parameters):
+	@staticmethod
+	def create(self, **parameters):
 		if not parameters.get("color"):
 			parameters["color"] = 0x151515
 		
@@ -37,5 +38,11 @@ class Embed(discord.Embed):
 				for field in fields
 			]
 		
-		# simplified: current embed instance -> new embed instance
-		self.__slots__ = discord.Embed.from_dict(parameters).__slots__
+		if parameters.get("image").get("url") == None:
+			parameters.pop("image")
+		if parameters.get("thumbnail").get("url") == None:
+			parameters.pop("thumbnail")
+		if parameters.get("footer").get("text") in (None, Embed.Empty):
+			parameters.pop("footer")
+		
+		return discord.Embed.from_dict(parameters)
