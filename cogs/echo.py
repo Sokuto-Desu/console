@@ -1,5 +1,6 @@
 from core.utils import Embed
 from ast import literal_eval
+from random import randint
 
 import discord
 from discord import slash_command
@@ -170,9 +171,9 @@ class Echo(commands.Cog):
 				}
 		
 		color = discord.Colour.from_rgb(
-			random.randint(0, 255),
-			random.randint(0, 255),
-			random.randint(0, 255)
+			randint(0, 255),
+			randint(0, 255),
+			randint(0, 255)
 		) if color == None else int(color, 16)
 		
 		embed = Embed.create(
