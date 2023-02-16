@@ -31,7 +31,7 @@ class EchoButton(discord.ui.Button):
 		await inter.response.send_message(content = self.callback_text, ephemeral = self.ephemeral)
 
 
-def converttobuttons(self, buttons: str):
+def convert_to_buttons(self, buttons: str):
 	styles = ["primary", "blurple", "secondary", "grey", "success", "green", "danger", "red", "link", "url"]
 	
 	buttons_list = buttons.split(";")
@@ -138,9 +138,9 @@ class Echo(commands.Cog):
 		self,
 		ctx,
 		content: Option(str, "any text", required=False, default=None),
-		title: Option(str, "title of embed", required=False, default=Embed.Empty), 
-		description: Option(str, "description of embed", required=False, default=Embed.Empty),
-		footer: Option(str, "footer of embed", required=False, default=Embed.Empty),
+		title: Option(str, "title of embed", required=False, default=None), 
+		description: Option(str, "description of embed", required=False, default=None),
+		footer: Option(str, "footer of embed", required=False, default=None),
 		fields: Option(str, "-add field // value -add field // value", required=False, default=None),
 		color: Option(str, "color of embed", required=False, default=None),
 		image: Option(str, "image url of embed", required=False, default=None),
@@ -170,25 +170,26 @@ class Echo(commands.Cog):
 					"inline": False
 				}
 		
-		color = discord.Colour.from_rgb(
-			randint(0, 255),
-			randint(0, 255),
-			randint(0, 255)
-		) if color == None else int(color, 16)
 		
-		embed = Embed.create(
-			title = title,
-			description = description,
-			color = color,
-			footer = {text: footer},
-			image = {"url": image},
-			thumbnail = {"url": thumbnail},
-			fields = fields
-		)
+		if any([title, description, footer, image, thumbnail, fields]):
+			color = int(color, 16) if color else None
+			
+			embed = Embed.create(
+				title = title,
+				description = description,
+				color = color,
+				footer = {"text": footer},
+				image = {"url": image},
+				thumbnail = {"url": thumbnail},
+				fields = fields_list
+			)
+		else:
+			embed = None
+		
 		
 		view = None
 		if buttons:
-			view = converttobuttons(buttons)
+			view = convert_to_buttons(buttons)
 		
 		if id != None:
 			
@@ -206,8 +207,9 @@ class Echo(commands.Cog):
 			
 			return
 		
+		
 		await ctx.delete()
-		await ctx.channel.send(content = content, embed = embed if embed else None, view = view)
+		await ctx.channel.send(content = content, embed = embed, view = view)
 
 
 

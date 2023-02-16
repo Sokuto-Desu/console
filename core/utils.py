@@ -23,7 +23,7 @@ async def convert_time(time):
 
 class Embed(discord.Embed):
 	@staticmethod
-	def create(self, **parameters):
+	def create(**parameters):
 		if not parameters.get("color"):
 			parameters["color"] = 0x151515
 		

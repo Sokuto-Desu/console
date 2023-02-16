@@ -10,7 +10,7 @@ class Owner(commands.Cog):
 		self.bot = bot
 	
 	async def cog_check(self, ctx):
-		return self.bot.is_owner(ctx.author)
+		return await self.bot.is_owner(ctx.author)
 	
 	
 	@slash_command(guild_ids = [settings.devserver])

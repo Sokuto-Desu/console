@@ -48,11 +48,12 @@ class ConsoleBot(commands.Bot):
 		print(f"Logged in as {self.user} (test mode: {str(self.is_test).lower()})")
 		print("-"*25)
 		
-		if "-tb" in argv:
+		if "-ft" in argv:
 			await asyncio.sleep(2)
+			await self.close()
 	
 	
 	def run(self):
-		if self.is_test:
+		if self.is_test or "-t" in argv:
 			return super().run(settings.test_token)
 		super().run(settings.token)
