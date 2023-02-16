@@ -38,4 +38,4 @@ class Embed(discord.Embed):
 			]
 		
 		# simplified: current embed instance -> new embed instance
-		self.__dict__ = discord.Embed.from_dict().__dict__
+		self.__dict__ = discord.Embed.from_dict(parameters).__dict__
