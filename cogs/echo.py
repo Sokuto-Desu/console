@@ -158,15 +158,16 @@ class Echo(commands.Cog):
 			await ctx.delete()
 			return await ctx.channel.send(embed = embed)
 		
-		fields_list = []
-		fields = fields.split("-add")[1:] # [1:] to remove empty string
-		for field in fields:
-			field = field.split("//") # splits to [name, value]
-			fields_list += {
-				"name": field[0],
-				"value": field[1],
-				"inline": False
-			}
+		if fields:
+			fields_list = []
+			fields = fields.split("-add")[1:] # [1:] to remove empty string
+			for field in fields:
+				field = field.split("//") # splits to [name, value]
+				fields_list += {
+					"name": field[0],
+					"value": field[1],
+					"inline": False
+				}
 		
 		color = discord.Colour.from_rgb(
 			random.randint(0, 255),
