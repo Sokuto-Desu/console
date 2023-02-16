@@ -3,7 +3,7 @@ import os
 
 load_dotenv()
 
-# prefix = ["os.", "cmd.", "Os.", "Cmd.", "OS.", "CMd.", "CMD."]
+prefix = ["os.", "cmd.", "Os.", "Cmd.", "OS.", "CMd.", "CMD."]
 
 owners = [898610134589243442]
 
