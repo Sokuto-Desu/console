@@ -31,7 +31,7 @@ class EchoButton(discord.ui.Button):
 		await inter.response.send_message(content = self.callback_text, ephemeral = self.ephemeral)
 
 
-def convert_to_buttons(self, buttons: str):
+def convert_to_buttons(buttons: str):
 	styles = ["primary", "blurple", "secondary", "grey", "success", "green", "danger", "red", "link", "url"]
 	
 	buttons_list = buttons.split(";")
