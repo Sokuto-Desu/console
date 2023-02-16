@@ -1,9 +1,8 @@
 import settings
 
 import discord
-from discord import slash_command
+from discord import slash_command, option
 from discord.ext import commands
-from discord.commands import Option
 
 
 class Owner(commands.Cog):
