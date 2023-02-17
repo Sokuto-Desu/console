@@ -2,6 +2,7 @@ import settings
 from sys import argv
 from .utils import Embed
 from traceback import format_exception
+from asyncio import sleep
 
 import discord
 from discord.ext import commands
@@ -49,7 +50,7 @@ class ConsoleBot(discord.Bot):
  		print("-"*25)
  		
  		if "-ft" in argv:
- 			await asyncio.sleep(2)
+ 			await sleep(2)
  			await self.close()
  	
  	

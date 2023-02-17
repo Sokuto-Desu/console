@@ -2,7 +2,7 @@ from core.utils import Embed
 from ast import literal_eval
 from random import randint
 
-from discord import slash_command, ui, ButtonStyle
+from discord import slash_command, ui, ButtonStyle, default_permissions
 from discord.ext.commands import Cog, MissingPermissions
 from discord.commands import Option
 
@@ -130,7 +130,7 @@ class Echo(Cog):
 	
 	
 	@slash_command(description="echo (/embed replacement). os.echo for more info.")
-	@discord.default_permissions(manage_messages = True)
+	@default_permissions(manage_messages = True)
 	async def echo(
 		self,
 		ctx,

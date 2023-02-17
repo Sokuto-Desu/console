@@ -41,18 +41,5 @@ class Embed(discord.Embed):
 		for parameter in ("image", "thumbnail", "footer", "title", "description"):
 			if parameters.get(parameter) in (None, Embed.Empty):
 				parameters.pop(parameter)
-				
-		if parameters.get("image") is None:
-			
-		if parameters.get("thumbnail") is None:
-			parameters.pop("thumbnail")
-		if parameters.get("footer") in (None, Embed.Empty):
-			parameters.pop("footer")
-		
-		if parameters.get("title") is None:
-			parameters.pop("title")
-		if parameters.get("description") is None:
-			parameters.pop("description")
-		# if title/description is None it will be "None" so 
 		
 		return discord.Embed.from_dict(parameters)

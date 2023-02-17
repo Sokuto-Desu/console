@@ -1,7 +1,6 @@
-from simpleeval import simpleeval
 from core.utils import Embed
-from random import chiice, randint
-from base64 import b46decode, b64encode
+from random import choice, randint
+from base64 import b64decode, b64encode
 
 from discord.ext.commands import Cog, MemberConverter
 from discord import slash_command, option
@@ -10,11 +9,6 @@ from discord import slash_command, option
 class Utility(Cog):
 	def __init__(self, bot):
 		self.bot = bot
-	
-	
-	@slash_command()
-	async def calculate(self, ctx, expr):
-		await ctx.respond("```\n{simpleeval(expr)}```")
 	
 	
 	@slash_command()
@@ -30,7 +24,7 @@ class Utility(Cog):
 	
 	
 	@slash_command(description="random choice")
-	@option("data", "choice1, choice2, choice3 ... (random choice) | any number (random number choice)")
+	@option("data", description="choice1, choice2, choice3 ... (random choice) | any number (random number choice)", required=True)
 	async def _random(self, ctx, *, data: str):
 		try:
 			number = int(data)
@@ -69,3 +63,7 @@ class Utility(Cog):
 		result = result.decode("utf-8")
 		
 		await ctx.respond(f"`{result}`")
+
+
+def setup(bot):
+	bot.add_cog(Utility(bot))
