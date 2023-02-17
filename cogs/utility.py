@@ -42,7 +42,7 @@ class Utility(Cog):
 	@option("data", description="example: 0001 (space) | • (U+2022)", required=True)
 	async def unicode(self, ctx, get: str, data: str):
 		if get == "character":
-			result = char(int(data, 16))
+			result = chr(int(data))
 		else:
 			result = str(hex(ord(data[0]))).replace("0x", "U+")
 		
