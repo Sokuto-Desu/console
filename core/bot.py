@@ -44,12 +44,18 @@ class ConsoleBot(discord.Bot):
  		channel = self.get_guild(settings.devserver).get_channel(settings.errors_channel)
  		await channel.send(embed = embed)
  	
+ 	async def on_connect(self):
+ 		if "-s" in argv:
+ 			await self.sync_commands()
+ 			print("commands synced.")
+ 	
  	async def on_ready(self):
  		print("-"*25)
- 		print(f"Logged in as {self.user} (test mode: {str(self.is_test).lower()})")
+ 		print(f"logged in as {self.user}.")
+ 		print(f"test mode: {str(self.is_test).lower()}.")
  		print("-"*25)
  		
- 		if "-ft" in argv:
+ 		if "-f" in argv:
  			await sleep(2)
  			await self.close()
  	
