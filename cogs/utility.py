@@ -25,7 +25,7 @@ class Utility(Cog):
 	
 	@slash_command(description="random choice")
 	@option("data", description="choice1, choice2, choice3 ... (random choice) | any number (random number choice)", required=True)
-	async def _random(self, ctx, *, data: str):
+	async def random(self, ctx, *, data: str):
 		try:
 			number = int(data)
 			return await ctx.respond(f"`{randint(1, number)}`")
@@ -40,7 +40,7 @@ class Utility(Cog):
 	@slash_command(description="character to unicode / unicode to character")
 	@option("get", required=True, choices=["character", "unicode"])
 	@option("data", description="example: 0001 (space) | • (U+2022)", required=True)
-	async def _unicode(self, ctx, get: str, data: str):
+	async def unicode(self, ctx, get: str, data: str):
 		if get == "character":
 			result = data.decode("utf-8")
 		else:
