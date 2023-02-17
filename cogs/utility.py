@@ -44,8 +44,8 @@ class Utility(Cog):
 		if get == "character":
 			result = chr(int(data))
 		else:
-			databytes = data[0].encode("unicode_escape")
-			result = str(databytes).replace("\\u", "U+")
+			code = ord(data[0])
+			result = f"U+{code}"
 		
 		await ctx.respond(f"`{result}`")
 	
