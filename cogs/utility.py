@@ -20,7 +20,7 @@ class Utility(Cog):
 			title = f"`{member}'s avatar`",
 			image = {"url": member.avatar.url}
 		)
-		await ctx.send(embed = embed)
+		await ctx.respond(embed = embed)
 	
 	
 	@slash_command(description="random choice")

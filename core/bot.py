@@ -56,7 +56,7 @@ class ConsoleBot(discord.Bot):
  		print("-"*25)
  		
  		if "-f" in argv:
- 			await sleep(2)
+ 			await sleep(1)
  			await self.close()
  	
  	
