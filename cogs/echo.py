@@ -2,22 +2,21 @@ from core.utils import Embed
 from ast import literal_eval
 from random import randint
 
-import discord
-from discord import slash_command
-from discord.ext import commands
+from discord import slash_command, ui, ButtonStyle
+from discord.ext.commands import Cog, MissingPermissions
 from discord.commands import Option
 
 
-class EchoButton(discord.ui.Button):
+class EchoButton(ui.Button):
 	def __init__(self, label, style, callback_text, ephemeral, emoji, disabled, url=None):
-		style = getattr(discord.ButtonStyle, style)
+		style = getattr(ButtonStyle, style)
 		
 		super().__init__(
-		label = label,
-			style = style,
-			emoji = emoji,
-			disabled = disabled,
-			url = url if style == discord.ButtonStyle.link else None
+		label=label,
+			style=style,
+			emoji=emoji,
+			disabled=disabled,
+			url=url if style == ButtonStyle.link else None
 		)
 		
 		self.disabled = disabled
@@ -28,7 +27,11 @@ class EchoButton(discord.ui.Button):
 	async def callback(self, inter):
 		if not self.callback_text or self.disabled:
 			return
-		await inter.response.send_message(content = self.callback_text, ephemeral = self.ephemeral)
+		
+		await inter.response.send_message(
+			content=self.callback_text, 
+			ephemeral=self.ephemeral
+		)
 
 
 def convert_to_buttons(buttons: str):
@@ -36,45 +39,39 @@ def convert_to_buttons(buttons: str):
 	
 	buttons_list = buttons.split(";")
 	
-	class NewView(discord.ui.View):
+	class EchoView(ui.View):
 		def __init__(self):
-			super().__init__(timeout = None)
+			super().__init__(timeout=None)
 	
-	view = NewView()
-	
+	view = EchoView()
 	
 	for button in buttons_list:
-		
 		button_dict = literal_eval(button)
 		
-		label = button_dict.get("label")
-		if not label:
-			label = "ᅠ"
+		label = button_dict.get("label") if label else "ᅠ"
+		style = button_dict.get("style") if style else "primary"
+		ephemeral = True if button_dict.get("ephemeral") == "true" else False
+		disabled = True if button_dict.get("disabled") == "true" else False
+		callback = button_dict.get("callback")
+		emoji = button_dict.get("emoji")
+		url = button_dict.get("url")
 		
-		style = button_dict.get("style")
-		if not style or style not in styles:
-			style = "primary"
-		
-		ephemeral = button_dict.get("ephemeral")
-		if ephemeral == "true" or not ephemeral:
-			ephemeral = True
-		else:
-			ephemeral = False
-		
-		disabled = button_dict.get("disabled")
-		if not disabled or disabled != "true":
-			disabled = False
-		else:
-			disabled = True
-		
-		button_item = EchoButton(label, style, button_dict.get("callback"), ephemeral, button_dict.get("emoji"), disabled, button_dict.get("url"))
+		button_item = EchoButton(
+			label=label,
+			style=style,
+			callback=callback,
+			ephemeral=ephemeral,
+			emoji=emoji,
+			disabled=disabled,
+			url=url
+		)
 		
 		view.add_item(button_item)
 	
 	return view
 
 
-class Echo(commands.Cog):
+class Echo(Cog):
 	"""
 	**content**: message content. `|` length: from 1 to 2000.
 	
@@ -152,12 +149,12 @@ class Echo(commands.Cog):
 		
 		if info:
 			embed = Embed.create(
-				title = "echo command info.",
-				description = self.__doc__.replace("	", "")
-				)
+				title="echo command info.",
+				description=self.__doc__.replace("	", "")
+			)
 			
 			await ctx.delete()
-			return await ctx.channel.send(embed = embed)
+			return await ctx.channel.send(embed=embed)
 		
 		fields_list = []
 		if fields:
@@ -171,42 +168,40 @@ class Echo(commands.Cog):
 					})
 		
 		
-		if any([title, description, footer, image, thumbnail, fields]):
+		if not any((title, description, footer, image, thumbnail, fields)):
+			embed = None
+		else:
 			color = int(color, 16) if color else None
 			
 			embed = Embed.create(
-				title = title,
-				description = description,
-				color = color,
-				footer = {"text": footer},
-				image = {"url": image},
-				thumbnail = {"url": thumbnail},
-				fields = fields_list
+				title=title,
+				description=description,
+				color=color,
+				footer={"text": footer},
+				image={"url": image},
+				thumbnail={"url": thumbnail},
+				fields=fields_list
 			)
-		else:
-			embed = None
 		
 		
 		view = convert_to_buttons(buttons) if buttons else None
 		
-		if id != None:
-			if ctx.author.guild_permissions.manage_messages:
+		if id:
+			if not ctx.author.guild_permissions.manage_messages:
+				raise MissingPermissions("manage_messages")
+			else:
 				try:
 					message = await ctx.channel.fetch_message(int(id))
-					await message.edit(embed = embed)
+					await message.edit(embed=embed)
 					
 					await ctx.respond("`embed succesfully edited.`", ephemeral = True)
 				except:
 					await ctx.respond("`can't found message. check if this message exists in current channel.`", ephemeral = True)
-			
-			else:
-				await ctx.send("`you don't have 'manage messages' permission to edit the embed.`", ephemeral = True)
-			
 			return
 		
 		
 		await ctx.delete()
-		await ctx.channel.send(content = content, embed = embed, view = view)
+		await ctx.channel.send(content=content, embed=embed, view=view)
 
 
 
