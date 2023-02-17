@@ -27,7 +27,7 @@ class Owner(Cog):
 		
 		elif mode == "exec":
 			# insert two tabs to every line except first
-			tabed_code = "\t\t".join(data.split("\n"))
+			tabed_code = "\n\t\t".join(data.split("\n"))
 			
 			_running_loop = get_running_loop()
 			
