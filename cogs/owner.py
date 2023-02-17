@@ -1,4 +1,5 @@
 from settings import devserver
+from asyncio import get_running_loop
 
 from discord import slash_command, option
 from discord.ext.commands import Cog
@@ -25,21 +26,18 @@ class Owner(Cog):
 			await ctx.respond(f"```py\n{result}```")
 		
 		elif mode == "exec":
-			# insert \n to the start of string
-			data = "\n" + data if not data.startswith("\n") else data
-			
 			# insert two tabs to every line except first
 			tabed_code = "\t\t".join(data.split("\n"))
 			
-			_running_loop = asyncio.get_running_loop()
+			_running_loop = get_running_loop()
 			
 			return exec(f"""
-					async def __ex():
-						try:
-							{tabed_code}
-						except Exception as e:
-							await ctx.respond(str(e)[:1995])
-					_running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": ctx}))
+async def __ex():
+	try:
+		{tabed_code}
+	except Exception as e:
+		await ctx.respond(str(e)[:1995])
+_running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": ctx}))
 	
 	
 	@slash_command(guild_ids=[devserver])

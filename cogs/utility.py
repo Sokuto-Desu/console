@@ -39,7 +39,7 @@ class Utility(Cog):
 	
 	@slash_command(description="character to unicode / unicode to character")
 	@option("get", required=True, choices=["character", "unicode"])
-	@option("data", description='example: 0061 or 61 (letter "a") | • (U+2022)', required=True)
+	@option("data", description='example: 0097 or 97 (small letter "a") | • (U+2022)', required=True)
 	async def unicode(self, ctx, get: str, data: str):
 		if get == "character":
 			result = chr(int(data))
