@@ -1,9 +1,12 @@
+import random
+
 from settings import devserver
 from asyncio import get_running_loop
 from utils import reply
+from core import Database
 
 from discord import option
-from discord.ext.commands import Cog
+from discord.ext.commands import Cog, command
 from discord.ext.bridge import bridge_command
 
 
@@ -15,8 +18,8 @@ class Owner(Cog):
 		return await self.bot.is_owner(ctx.author)
 	
 	
-	@bridge_command(guild_ids=[devserver])
-	@option("mode",required=True, choices=["eval", "exec"])
+	@bridge_command(hidden=True, guild_ids=[devserver])
+	@option("mode", required=True, choices=["eval", "exec"])
 	@option("data", required=True)
 	async def run(self, ctx, mode: str, data: str):
 		if mode == "eval":
@@ -42,10 +45,36 @@ async def __ex():
 _running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": ctx}))
 	
 	
-	@bridge_command(aliases=["sd"], guild_ids=[devserver])
+	@bridge_command(aliases=["sd"], hidden=True, guild_ids=[devserver])
 	async def shutdown(self, ctx):
 		await reply(ctx, "`closing connection...`")
 		await self.bot.close()
+	
+	
+	@command(hidden=True, guild_ids=[devserver])
+	async def psai(self, ctx, d):
+		sentences = Database.get("AI")
+		if not sentences:
+			sentences = Database.set("AI", [])
+		
+		new_sentences = sentences.append(d)
+		Database.set("AI", new_sentences)
+	
+	@command(hidden=True, guild_ids=[devserver])
+	async def spai(self, ctx):
+		sentences = Database.get("AI")
+		sentence = random.choice(sentences).split()
+		sentence2 = random.choice(sentences).split()
+		
+		for index, x in enumerate(sentence2):
+			if random.randint(0, 1):
+				try:
+					sentence[index] = random.choice(sentence2)
+				except IndexError:
+					pass
+		
+		reply = " ".join(sentence)
+		await ctx.send(reply)
 
 
 def setup(bot):

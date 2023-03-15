@@ -14,10 +14,10 @@ class Info(Cog):
 	async def info(self, ctx):
 		pass
 	
-	@info.command()
+	@info.command(description="echo info", usage="os.info echo")
 	async def echo(self, ctx):
 		embed = make_embed(
-			title="echo command info.",
+			title="/echo command info.",
 			description=settings.echo_info
 		)
 		

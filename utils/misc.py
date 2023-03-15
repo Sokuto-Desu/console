@@ -1,5 +1,8 @@
+import settings
 from asyncio import sleep
+
 from discord import Message
+from discord.ext import commands
 
 
 async def reply(ctx, *args, **kwargs):
@@ -29,3 +32,23 @@ async def convert_time(time):
 
 async def str_to_bool(arg):
 	return True if arg.lower() == "true" else False
+
+
+async def handle_error(bot, ctx, error):
+	if isinstance(error, commands.MissingPermissions):
+		return await ctx.respond(f"`error. {error.message.lower()}`")
+	elif isinstance(error, commands.UserInputError):
+		return await ctx.respond(f"`error. incorrect argument(s). {error.message.lower()}`")
+	elif isinstance(error, commands.CommandNotFound):
+		return
+	
+	
+	traceback = "".join(format_exception(type(error), error, error.__traceback__))
+	embed = make_embed(
+		title = f"**{ctx.guild}**: **{ctx.channel}**: **{ctx.author}**",
+		description = f"```\n{traceback}```"
+	)
+	
+	guild = bot.get_guild(settings.devserver)
+	channel = guild.get_channel(settings.errors_channel)
+	await channel.send(embed=embed)

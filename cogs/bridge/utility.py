@@ -12,7 +12,7 @@ class Utility(Cog):
 		self.bot = bot
 	
 	
-	@bridge_command()
+	@bridge_command(description="get member avatar", usage="os.avatar n>member", brief="os.avatar @Console#3862")
 	@option("member", required=False, default=None)
 	async def avatar(self, ctx, member: MemberConverter=None):
 		member = ctx.author if member is None else member
@@ -24,7 +24,7 @@ class Utility(Cog):
 		await ctx.respond(embed = embed)
 	
 	
-	@bridge_command(description="random choice")
+	@bridge_command(description="random choice", usage="os.random r>number or choices", brief="os.random yes, no, probably // os.random 10")
 	@option("data", description="choice1, choice2, choice3 ... (random choice) | any number (random number choice)", required=True)
 	async def random(self, ctx, *, data: str):
 		try:
@@ -38,7 +38,7 @@ class Utility(Cog):
 		await ctx.respond(f"`{choice(choices)}`")
 	
 	
-	@bridge_command(description="base64 encode/decode")
+	@bridge_command(aliases=["b64", "64"], description="base64 encode/decode", usage="os.b")
 	@option("mode", required=True, choices=["encode", "decode"])
 	@option("data", required=True)
 	async def base64(self, ctx, mode: str, data: str):
