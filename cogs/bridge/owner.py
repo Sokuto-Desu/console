@@ -1,8 +1,10 @@
 from settings import devserver
 from asyncio import get_running_loop
+from utils import reply
 
-from discord import slash_command, option
+from discord import option
 from discord.ext.commands import Cog
+from discord.ext.bridge import bridge_command
 
 
 class Owner(Cog):
@@ -13,7 +15,7 @@ class Owner(Cog):
 		return await self.bot.is_owner(ctx.author)
 	
 	
-	@slash_command(guild_ids=[devserver])
+	@bridge_command(guild_ids=[devserver])
 	@option("mode",required=True, choices=["eval", "exec"])
 	@option("data", required=True)
 	async def run(self, ctx, mode: str, data: str):
@@ -40,9 +42,9 @@ async def __ex():
 _running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": ctx}))
 	
 	
-	@slash_command(guild_ids=[devserver])
+	@bridge_command(aliases=["sd"], guild_ids=[devserver])
 	async def shutdown(self, ctx):
-		await ctx.respond("`closing connection...`")
+		await reply(ctx, "`closing connection...`")
 		await self.bot.close()
 
 
