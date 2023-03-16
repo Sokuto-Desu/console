@@ -5,8 +5,7 @@ from discord.ext import commands
 from discord.ext.bridge import Bot
 
 from sys import argv
-from utils import make_embed, handle_error
-from traceback import format_exception
+from utils import handle_error
 from asyncio import sleep
 
 

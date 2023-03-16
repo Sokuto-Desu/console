@@ -53,16 +53,18 @@ _running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": 
 	
 	@command(hidden=True, guild_ids=[devserver])
 	async def psai(self, ctx, d):
-		sentences = Database.get("AI")
+		db = Database()
+		sentences = db.get("AI")
 		if not sentences:
-			sentences = Database.set("AI", [])
+			sentences = []
+			db.set("AI", [])
 		
-		new_sentences = sentences.append(d)
-		Database.set("AI", new_sentences)
+		sentences.append(d)
+		db.set("AI", sentences)
 	
 	@command(hidden=True, guild_ids=[devserver])
 	async def spai(self, ctx):
-		sentences = Database.get("AI")
+		sentences = Database().get("AI")
 		sentence = random.choice(sentences).split()
 		sentence2 = random.choice(sentences).split()
 		

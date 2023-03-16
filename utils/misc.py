@@ -1,7 +1,8 @@
 import settings
 from asyncio import sleep
+from traceback import format_exception
 
-from discord import Message
+from discord import Message, Embed
 from discord.ext import commands
 
 
@@ -44,9 +45,10 @@ async def handle_error(bot, ctx, error):
 	
 	
 	traceback = "".join(format_exception(type(error), error, error.__traceback__))
-	embed = make_embed(
-		title = f"**{ctx.guild}**: **{ctx.channel}**: **{ctx.author}**",
-		description = f"```\n{traceback}```"
+	embed = Embed(
+		title=f"**{ctx.guild}**: **{ctx.channel}**: **{ctx.author}**",
+		description=f"```\n{traceback}```",
+		color=0x151515
 	)
 	
 	guild = bot.get_guild(settings.devserver)

@@ -12,7 +12,7 @@ test_token = getenv("TEST_TOKEN")
 
 is_test = False
 errors_channel = 989094089305772042
-deta_key = getenv("deta_key")
+deta_key = getenv("DETA_KEY")
 
 
 cogs = [
