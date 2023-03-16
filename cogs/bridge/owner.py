@@ -21,7 +21,7 @@ class Owner(Cog):
 	@bridge_command(hidden=True, guild_ids=[devserver])
 	@option("mode", required=True, choices=["eval", "exec"])
 	@option("data", required=True)
-	async def run(self, ctx, mode: str, data: str):
+	async def run(self, ctx, mode: str, *, data: str):
 		if mode == "eval":
 			try:
 				result = eval(data)
@@ -50,9 +50,20 @@ _running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": 
 		await reply(ctx, "`closing connection...`")
 		await self.bot.close()
 	
+	"""
+	@Cog.listener()
+	async def on_message(self, message):
+		if message.channel.id != 967874492141551706 or "spai" in message.content or message.author.id == self.bot.user.id:
+			return
+		
+		db = Database()
+		sentences = db.get("AI")
+		
+		sentences.append(message.content)
+		db.set("AI", sentences)
 	
 	@command(hidden=True, guild_ids=[devserver])
-	async def psai(self, ctx, d):
+	async def psai(self, ctx, *, d):
 		db = Database()
 		sentences = db.get("AI")
 		if not sentences:
@@ -61,6 +72,8 @@ _running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": 
 		
 		sentences.append(d)
 		db.set("AI", sentences)
+		
+		
 	
 	@command(hidden=True, guild_ids=[devserver])
 	async def spai(self, ctx):
@@ -77,6 +90,7 @@ _running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": 
 		
 		reply = " ".join(sentence)
 		await ctx.send(reply)
+	"""
 
 
 def setup(bot):
