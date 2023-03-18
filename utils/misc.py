@@ -2,15 +2,21 @@ import settings
 from asyncio import sleep
 from traceback import format_exception
 
-from discord import Message, Embed
+from discord import Message, Embed, ApplicationContext
 from discord.ext import commands
 
 
 async def reply(ctx, *args, **kwargs):
-	if ctx.is_app:
-		await ctx.respond(*args, **kwargs)
-	else:
-		await ctx.send(*args, **kwargs)
+	try:
+		if ctx.is_app:
+			await ctx.respond(*args, **kwargs)
+		else:
+			await ctx.send(*args, **kwargs)
+	except AttributeError:
+		if isinstance(ctx, ApplicationContext):
+			await ctx.respond(*args, **kwargs)
+		else:
+			await ctx.send(*args, **kwargs)
 
 async def close(message: Message, time: int=5):
 	await sleep(time)
@@ -39,7 +45,7 @@ async def handle_error(bot, ctx, error):
 	if isinstance(error, commands.MissingPermissions):
 		return await ctx.respond(f"`error. {error.message.lower()}`")
 	elif isinstance(error, commands.UserInputError):
-		return await ctx.respond(f"`error. incorrect argument(s). {error.message.lower()}`")
+		return await ctx.respond(f"`error. incorrect argument(s). {str(error).lower()}`")
 	elif isinstance(error, commands.CommandNotFound):
 		return
 	

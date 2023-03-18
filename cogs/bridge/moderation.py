@@ -1,7 +1,7 @@
 from typing import Optional
 
-from discord import Member, option
-from discord.ext.commands import Cog, has_permissions
+from discord import option, Member
+from discord.ext.commands import Cog, has_permissions, MemberConverter
 from discord.ext.bridge import bridge_command
 
 
@@ -15,7 +15,7 @@ class Moderation(Cog):
 	@option("amount", int, description="amount of messages to clear", required=True)
 	@option("user", Member, description="clear filter: user", required=False, default=None)
 	@option("contains", str, description="clear filter: message content", required=False, default=None)
-	async def clear(self, ctx, amount: int = 1, user: Optional[Member] = None, contains = None):
+	async def clear(self, ctx, amount: int = 1, user: Optional[MemberConverter] = None, contains: str = None):
 		def clear_check(message):
 			result = True
 			
