@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from os import getenv, listdir
+from sys import argv
 
 load_dotenv()
 
@@ -10,9 +11,12 @@ activity = "/help"
 token = getenv("TOKEN")
 test_token = getenv("TEST_TOKEN")
 
-is_test = False
+is_test = False if not "-t" in argv else True
 errors_channel = 989094089305772042
 deta_key = getenv("DETA_KEY")
+
+if is_test:
+	prefix = "sudo."
 
 
 cogs = [

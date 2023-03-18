@@ -1,24 +1,28 @@
-import random
+import random, openai
 
 from settings import devserver
-from asyncio import get_running_loop
+from asyncio import get_running_loop, sleep
 from utils import reply
 from core import Database
 
 from discord import option
-from discord.ext.commands import Cog, command
+from discord.ext.commands import Cog, command, is_owner
 from discord.ext.bridge import bridge_command
 
+openai.api_key = "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"
 
 class Owner(Cog):
 	def __init__(self, bot):
 		self.bot = bot
+#		self.owner_id = 898610134589243442
 	
-	async def cog_check(self, ctx):
-		return await self.bot.is_owner(ctx.author)
+	
+#	async def cog_check(self, ctx):
+#		return self.owner_id == ctx.author.id
 	
 	
 	@bridge_command(hidden=True, guild_ids=[devserver])
+	@is_owner()
 	@option("mode", required=True, choices=["eval", "exec"])
 	@option("data", required=True)
 	async def run(self, ctx, mode: str, *, data: str):
@@ -42,10 +46,11 @@ async def __ex():
 		{tabed_code}
 	except Exception as e:
 		await ctx.respond(str(e)[:1995])
-_running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": ctx}))
+_running_loop.create_task(__ex())""", globals().update({"self": self, "bot": self.bot, "ctx": ctx}))
 	
 	
 	@bridge_command(aliases=["sd"], hidden=True, guild_ids=[devserver])
+	@is_owner()
 	async def shutdown(self, ctx):
 		await reply(ctx, "`closing connection...`")
 		await self.bot.close()
@@ -64,35 +69,13 @@ _running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": 
 		reply = " ".join(sentence)
 		await ctx.send(reply)
 	
-	@Cog.listener()
-	async def on_message(self, message):
-		if self.bot.user.mentioned_in(message):
-			await self.say_random(message.channel)
-		if message.channel.id != 967874492141551706 or message.content[:3].lower() in ["os.", "cmd"] or message.author.bot or "<@" in message.content:
-			return
+	@command()
+	async def chat(self, ctx, *, prompt):
+		message = await ctx.send("`please wait a minute.`")
 		
-		db = Database()
-		sentences = db.get("AI")
+		result = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
 		
-		sentences.append(message.content)
-		db.set("AI", sentences)
-	
-	@command(hidden=True, guild_ids=[devserver])
-	async def psai(self, ctx, *, d):
-		db = Database()
-		sentences = db.get("AI")
-		if not sentences:
-			sentences = []
-			db.set("AI", [])
-		
-		sentences.append(d)
-		db.set("AI", sentences)
-		
-		
-	
-	@command(hidden=True, guild_ids=[devserver])
-	async def spai(self, ctx):
-		await self.say_random(ctx)
+		await message.edit(f"`please wait a minute.`\n```\n{result.choices[0].message.content}```")
 
 
 def setup(bot):
