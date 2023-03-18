@@ -86,7 +86,7 @@ class Echo(Cog):
 				buttons_list.append(literal_eval(button))
 			
 			view = View()
-			for button in make_buttons(buttons):
+			for button in make_buttons(buttons_list):
 				view.add_item(button)
 		
 		await ctx.delete()
