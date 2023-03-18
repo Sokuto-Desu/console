@@ -1,4 +1,3 @@
-from .misc import str_to_bool
 from typing import Union
 
 from discord import Embed, ButtonStyle, PartialEmoji
@@ -65,8 +64,8 @@ def make_buttons(buttons_list: list) -> list:
 	for button_dict in buttons_list:
 		label = button_dict.get("label") or "ᅠ"
 		style = button_dict.get("style") or "primary"
-		ephemeral = str_to_bool(button_dict.get("ephemeral"))
-		disabled = str_to_bool(button_dict.get("disabled"))
+		ephemeral = False if button_dict.get("ephemeral") == "false" else True
+		disabled = True if button_dict.get("disabled") == "true" else False
 		callback = button_dict.get("callback")
 		emoji = button_dict.get("emoji")
 		url = button_dict.get("url")

@@ -37,9 +37,6 @@ async def convert_time(time):
 	return times
 
 
-async def str_to_bool(arg):
-	return True if arg.lower() == "true" else False
-
 
 async def handle_error(bot, ctx, error):
 	if isinstance(error, commands.MissingPermissions):
