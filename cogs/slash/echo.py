@@ -52,7 +52,7 @@ class Echo(Cog):
 		if not any((title, description, footer, image, thumbnail, fields)):
 			embed = None
 		else:
-			color = int(color, 16) or Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+			color = int(color, 16) if color else Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
 			
 			embed = make_embed(
 				title=title,
