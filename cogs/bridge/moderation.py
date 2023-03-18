@@ -1,9 +1,12 @@
+import openai
+
 from typing import Optional
 
 from discord import option, Member
-from discord.ext.commands import Cog, has_permissions, MemberConverter
+from discord.ext.commands import Cog, has_permissions, MemberConverter, command
 from discord.ext.bridge import bridge_command
 
+openai.api_key = "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"
 
 class Moderation(Cog):
 	def __init__(self, bot):
@@ -31,6 +34,14 @@ class Moderation(Cog):
 		
 		await ctx.send(f"`successfully cleared {len(cleared) - 1} messages!`", delete_after=1.5)
 	
+	@command()
+	async def chat(self, ctx, *, prompt):
+		message = await ctx.send("`please wait a minute.`")
+		
+		result = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+		
+		await message.edit(f"`please wait a minute.`\n```\n{result.choices[0].message.content}```")
+
 
 
 def setup(bot):
