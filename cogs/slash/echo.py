@@ -13,7 +13,7 @@ class Echo(Cog):
 	
 	
 	@slash_command(description="echo (/embed replacement). /info echo for more info")
-	@option("content", description="any text"
+	@option("content", description="any text",
 			required=False, default=None)
 	@option("title", description="any text",
 			required=False, default=None)
