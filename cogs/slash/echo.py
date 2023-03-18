@@ -81,10 +81,13 @@ class Echo(Cog):
 		view = None
 		if buttons:
 			buttons = buttons.split(";")
-			buttons = literal_eval(buttons)
+			buttons_list = []
+			for button in buttons:
+				buttons_list.append(literal_eval(button))
 			
 			view = View()
-			view.add_item(make_buttons(buttons))
+			for button in make_buttons(buttons):
+				view.add_item(button)
 		
 		await ctx.delete()
 		await ctx.send(content=content, embed=embed, view=view)
