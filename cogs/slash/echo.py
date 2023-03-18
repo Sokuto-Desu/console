@@ -13,6 +13,8 @@ class Echo(Cog):
 	
 	
 	@slash_command(description="echo (/embed replacement). /info echo for more info")
+	@option("content", description="any text"
+			required=False, default=None)
 	@option("title", description="any text",
 			required=False, default=None)
 	@option("description", description="description of embed",
@@ -69,11 +71,11 @@ class Echo(Cog):
 			else:
 				try:
 					message = await ctx.channel.fetch_message(int(id))
-					await message.edit(embed=embed)
+					await message.edit(content=content, embed=embed)
 					
-					await ctx.respond("`embed succesfully edited.`", ephemeral = True)
+					await ctx.respond("`embed succesfully edited.`", ephemeral=True)
 				except MessageNotFound:
-					await ctx.respond("`can't found message. check if this message exists in current channel.`", ephemeral = True)
+					await ctx.respond("`can't found message. check if this message exists in current channel.`", ephemeral=True)
 			return
 		
 		view = None

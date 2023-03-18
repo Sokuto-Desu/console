@@ -13,11 +13,10 @@ from discord.ext.bridge import bridge_command
 class Owner(Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.owner_id = 898610134589243442
 	
 	
 	async def cog_check(self, ctx):
-		return self.owner_id == ctx.author.id
+		return await self.bot.is_owner(ctx.author)
 	
 	
 	@bridge_command(hidden=True, guild_ids=[devserver])

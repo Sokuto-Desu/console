@@ -40,7 +40,7 @@ class Moderation(Cog):
 		
 		result = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
 		
-		await message.edit(f"`please wait a minute.`\n```\n{result.choices[0].message.content}```")
+		await message.edit(f"```\n{result.choices[0].message.content}```")
 
 
 
