@@ -50,10 +50,25 @@ _running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": 
 		await reply(ctx, "`closing connection...`")
 		await self.bot.close()
 	
-	"""
+	async def say_random(self, ctx):
+		sentences = Database().get("AI")
+		sentence = random.choice(sentences).split()
+		
+		for index, x in enumerate(sentence):
+			if random.randint(0, 1):
+				try:
+					sentence[index] = random.choice(random.choice(sentences).split())
+				except IndexError:
+					pass
+		
+		reply = " ".join(sentence)
+		await ctx.send(reply)
+	
 	@Cog.listener()
 	async def on_message(self, message):
-		if message.channel.id != 967874492141551706 or "spai" in message.content or message.author.id == self.bot.user.id:
+		if self.bot.user.mentioned_in(message):
+			await self.say_random(message.channel)
+		if message.channel.id != 967874492141551706 or message.content[:3].lower() in ["os.", "cmd"] or message.author.bot or "<@" in message.content:
 			return
 		
 		db = Database()
@@ -77,20 +92,7 @@ _running_loop.create_task(__ex())""", globals().update({"bot": self.bot, "ctx": 
 	
 	@command(hidden=True, guild_ids=[devserver])
 	async def spai(self, ctx):
-		sentences = Database().get("AI")
-		sentence = random.choice(sentences).split()
-		sentence2 = random.choice(sentences).split()
-		
-		for index, x in enumerate(sentence2):
-			if random.randint(0, 1):
-				try:
-					sentence[index] = random.choice(sentence2)
-				except IndexError:
-					pass
-		
-		reply = " ".join(sentence)
-		await ctx.send(reply)
-	"""
+		await self.say_random(ctx)
 
 
 def setup(bot):
