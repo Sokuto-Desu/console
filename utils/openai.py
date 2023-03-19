@@ -23,6 +23,8 @@ class ChatGPT:
 	def count_user_messages(self):
 		user_messages = 0
 		for message in self.messages:
+			if not message:
+				return 1
 			if message.get("role") == "user":
 				user_messages += 1
 		return user_messages
