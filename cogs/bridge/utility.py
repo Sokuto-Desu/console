@@ -66,7 +66,7 @@ class Utility(Cog):
 		message = await ctx.send("`please wait a minute.`")
 		
 		chatgpt = ChatGPT(ctx.author.id)
-		completion = chatgpt.prompt(prompt)
+		completion = await chatgpt.prompt(prompt)
 		
 		result = []
 		for i in range(0, len(completion), 1980):

@@ -18,7 +18,7 @@ class ChatGPT:
 		self.conversation_limit = 10
 		self.user_limit_status = f"{len(self.messages)}/{self.conversation_limit}"
 	
-	def prompt(self, message: str):
+	async def prompt(self, message: str):
 		self.messages = self.db.get(self.user_id)
 		
 		if len(self.messages) > self.conversation_limit:
