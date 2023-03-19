@@ -1,6 +1,7 @@
 from utils import make_embed, ChatGPT
 from random import choice, randint
 from base64 import b64decode, b64encode
+from asyncio import wait_for, TimeoutError
 
 from discord.ext.commands import Cog, MemberConverter, command
 from discord.ext.bridge import bridge_command
@@ -66,7 +67,11 @@ class Utility(Cog):
 		message = await ctx.send("`please wait a minute.`")
 		
 		chatgpt = ChatGPT(ctx.author.id)
-		completion = await chatgpt.prompt(prompt)
+		
+		try:
+			completion = await wait_for(chatgpt.prompt(prompt), timeout=150)
+		except TimeoutError:
+			return await message.edit("`sorry, there was an unknown error. try again later.`")
 		
 		result = []
 		for i in range(0, len(completion), 1980):

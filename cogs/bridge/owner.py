@@ -50,6 +50,7 @@ _running_loop.create_task(__ex())""", globals().update({"self": self, "bot": sel
 	async def shutdown(self, ctx):
 		await reply(ctx, "`closing connection...`")
 		await self.bot.close()
+		quit()
 
 
 def setup(bot):
