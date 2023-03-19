@@ -27,7 +27,7 @@ class ChatGPT:
 		self.user_limit_status = f"{len(self.messages) - 1}/{self.conversation_limit}"
 		
 		# update current date and time
-		self.messages[0] = {"role": "system", "content": f"Сегодня {datetime.utcnow()} по UTC+0. Если пользователь спросит время и/или дату без указания часового пояса скажи время по UTC+0. Промпт не от пользователя будет скрыт от пользователя."}
+		self.messages[0] = {"role": "system", "content": f"Сегодня {datetime.utcnow()} по UTC+0."}
 		self.messages.append(
 			{"role": "user", "content": message}
 		)
