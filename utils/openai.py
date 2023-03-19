@@ -16,7 +16,7 @@ class ChatGPT:
 			self.messages = [None]
 		
 		self.conversation_limit = 5
-		self.user_limit_status = f"{len(self.messages)}/{self.conversation_limit}"
+		self.user_limit_status = f"{len(self.messages) - 1}/{self.conversation_limit}"
 	
 	def prompt(self, message: str):
 		self.messages = self.db.get(self.user_id)
