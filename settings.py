@@ -1,3 +1,5 @@
+import openai
+
 from dotenv import load_dotenv
 from os import getenv, listdir
 from sys import argv
@@ -14,6 +16,7 @@ test_token = getenv("TEST_TOKEN")
 is_test = False if not "-t" in argv else True
 errors_channel = 989094089305772042
 deta_key = getenv("DETA_KEY")
+openai_api_key = getenv("OPENAI_API_KEY")
 
 if is_test:
 	prefix = "sudo."
@@ -29,6 +32,7 @@ cogs_slash = [
 	for file_name in listdir("./cogs/slash")
 	if file_name[-3:] == ".py"
 ]
+
 
 
 echo_info = """

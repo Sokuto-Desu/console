@@ -1,8 +1,8 @@
-from utils import make_embed
+from utils import make_embed, ChatGPT
 from random import choice, randint
 from base64 import b64decode, b64encode
 
-from discord.ext.commands import Cog, MemberConverter
+from discord.ext.commands import Cog, MemberConverter, command
 from discord.ext.bridge import bridge_command
 from discord import option
 
@@ -60,6 +60,21 @@ class Utility(Cog):
 			result = f"U+{code}"
 		
 		await ctx.respond(f"`{result}`")
+	
+	@command(aliases=["chat"])
+	async def chatgpt(self, ctx, *, prompt):
+		message = await ctx.send("`please wait a minute.`")
+		
+		chatgpt = ChatGPT(ctx.author.id)
+		completion = chatgpt.prompt(prompt)
+		
+		result = []
+		for i in range(0, len(completion), 1980):
+			result.append(completion[i:i+1980])
+		
+		await message.edit(f"```\n[conversation limit: {chatgpt.user_limit_status}]\n{result.pop(0)}```")
+		for content in result:
+			await ctx.send(f"```\n{content}```")
 
 
 def setup(bot):

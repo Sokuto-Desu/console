@@ -3,7 +3,7 @@ from deta import Deta
 
 
 class Database:
-	def __init__(self, base_name="ConsoleDB"): # do NOT provide base_name if its not necessary.
+	def __init__(self, base_name="ConsoleDB"):
 		self.collection = Deta(deta_key)
 		self.base = self.collection.Base(base_name)
 	
@@ -12,7 +12,11 @@ class Database:
 		return self.base.put(key=key, data=value)
 	
 	def get(self, key: str):
-		return self.base.get(key=key)["value"]
+		item = self.base.get(key=key)
+		if item:
+			return item["value"]
+		else:
+			return None
 	
 	def delete(self, key: str):
 		self.base.delete(key=key) # deta delete method always returns None so
