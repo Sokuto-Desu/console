@@ -9,14 +9,15 @@ from discord.ext import commands
 async def reply(ctx, *args, **kwargs):
 	try:
 		if ctx.is_app:
-			await ctx.respond(*args, **kwargs)
+			return await ctx.respond(*args, **kwargs)
 		else:
-			await ctx.send(*args, **kwargs)
+			return await ctx.send(*args, **kwargs)
+	
 	except AttributeError:
 		if isinstance(ctx, ApplicationContext):
-			await ctx.respond(*args, **kwargs)
+			return await ctx.respond(*args, **kwargs)
 		else:
-			await ctx.send(*args, **kwargs)
+			return await ctx.send(*args, **kwargs)
 
 async def close(message: Message, time: int=5):
 	await sleep(time)
