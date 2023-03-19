@@ -85,7 +85,7 @@ class Utility(Cog):
 		for content in result:
 			await ctx.send(f"`{content}")
 	
-	@bridge_command(aliases=["chatgpt-erase", "chat-erase", "erase_dialogue"], description="erase dialogue with chatgpt", usage="os.chatgpt_erase_dialogue", brief="os.chatgpt-erase")
+	@bridge_command(aliases=["chatgpt-erase", "chat-erase", "erase_dialogue", "erase-chat", "erase-chatgpt"], description="erase dialogue with chatgpt", usage="os.chatgpt_erase_dialogue", brief="os.chatgpt-erase")
 	async def chatgpt_erase_dialogue(self, ctx):
 		chatgpt = ChatGPT(ctx.author.id)
 		await chatgpt.erase_dialogue()
