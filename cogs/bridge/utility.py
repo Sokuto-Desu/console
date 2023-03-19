@@ -14,7 +14,11 @@ class Utility(Cog):
 		self.bot = bot
 	
 	
-	@bridge_command(description="get member avatar", usage="os.avatar n>member", brief="os.avatar @Console#3862")
+	@bridge_command(
+		description="get member avatar",
+		usage="os.avatar n>member", 
+		brief="os.avatar @Console#3862"
+	)
 	@option("member", required=False, default=None)
 	async def avatar(self, ctx, member: MemberConverter=None):
 		member = ctx.author if member is None else member
@@ -26,7 +30,11 @@ class Utility(Cog):
 		await ctx.respond(embed = embed)
 	
 	
-	@bridge_command(description="random choice", usage="os.random r>number or choices", brief="os.random yes, no, probably // os.random 10")
+	@bridge_command(
+		description="random choice",
+		usage="os.random r>number or choices",
+		brief="os.random yes, no, probably // os.random 10"
+	)
 	@option("data", description="choice1, choice2, choice3 ... (random choice) | any number (random number choice)", required=True)
 	async def random(self, ctx, *, data: str):
 		try:
@@ -40,7 +48,12 @@ class Utility(Cog):
 		await ctx.respond(f"`{choice(choices)}`")
 	
 	
-	@bridge_command(aliases=["b64", "64"], description="base64 encode/decode", usage="os.base64 r>encode/decode r>data", brief="os.b64 encode Hello world! // os.64 decode SGVsbG8gd29ybGQh")
+	@bridge_command(
+		aliases=["b64", "64"],
+		description="base64 encode/decode",
+		usage="os.base64 r>encode/decode r>data",
+		brief="os.b64 encode Hello world! // os.64 decode SGVsbG8gd29ybGQh"
+	)
 	@option("mode", required=True, choices=["encode", "decode"])
 	@option("data", required=True)
 	async def base64(self, ctx, mode: str, *, data: str):
@@ -51,7 +64,12 @@ class Utility(Cog):
 		await ctx.respond(f"`{result}`")
 	
 	
-	@bridge_command(aliases=["uni"], description="character to unicode / unicode to character", usage="os.unicode r>character/unicode r>unicode or any symbol", brief="os.unicode character 0097 // os.uni unicode a")
+	@bridge_command(
+		aliases=["uni"],
+		description="character to unicode / unicode to character",
+		usage="os.unicode r>character/unicode r>unicode or any symbol",
+		brief="os.unicode character 0097 // os.uni unicode a"
+	)
 	@option("get", required=True, choices=["character", "unicode"])
 	@option("data", description='example: 0097 or 97 (small letter "a") | • (U+2022)', required=True)
 	async def unicode(self, ctx, get: str, data: str):
@@ -64,7 +82,12 @@ class Utility(Cog):
 		
 		await ctx.respond(f"`{result}`")
 	
-	@bridge_command(aliases=["chat"], description="talk to chatgpt.\nnote: if console doesn't answer for a long time just run command again.", usage="os.chatgpt r>prompt", brief="os.chatgpt Hello")
+	@bridge_command(
+		aliases=["chat"],
+		description="talk to chatgpt.\nnote: if console doesn't answer for a long time just run command again.",
+		usage="os.chatgpt r>prompt",
+		brief="os.chatgpt Hello"
+	)
 	@option("prompt", required=True)
 	async def chatgpt(self, ctx, *, prompt: str):
 		message = await reply(ctx, "`please wait a minute.`")
@@ -85,7 +108,12 @@ class Utility(Cog):
 		for content in result:
 			await ctx.send(f"`{content}")
 	
-	@bridge_command(aliases=["chatgpt-erase", "chat-erase", "erase_dialogue", "erase-chat", "erase-chatgpt"], description="erase dialogue with chatgpt", usage="os.chatgpt_erase_dialogue", brief="os.chatgpt-erase")
+	@bridge_command(
+		aliases=["chatgpt-erase", "chat-erase", "erase_dialogue", "erase-chat", "erase-chatgpt", "ed"],
+		description="erase dialogue with chatgpt",
+		usage="os.chatgpt_erase_dialogue",
+		brief="os.chatgpt-erase"
+	)
 	async def chatgpt_erase_dialogue(self, ctx):
 		chatgpt = ChatGPT(ctx.author.id)
 		await chatgpt.erase_dialogue()
