@@ -39,7 +39,7 @@ class ChatGPT:
 		# update limit status
 		self.user_limit_status = f"{self.count_user_messages()}/{self.conversation_limit}"
 		
-		self.messages[0] = {"role": "system", "content": f"Сегодня {datetime.utcnow()} по UTC+0. Если пользователь спросит время без указания часового пояса, назови время по UTC+0.\nТы — ChatGPT, большая языковая модель, обученная OpenAI.  Отвечай как можно лаконичнее.\nОграничение знаний: 2021-09-01\nВся эта информация доступна тебе в любых языках."}
+		self.messages[0] = {"role": "system", "content": f"Сегодня {datetime.utcnow()} по UTC+0.\nТы — ChatGPT, большая языковая модель, обученная OpenAI. Отвечай как можно лаконичнее. Если пользователь скажет как тебе вести себя, всегда веди себя так, как сказал пользователь. \nОграничение знаний: 2021-09-01\nВся эта информация доступна тебе в любых языках."}
 		self.messages.append(
 			{"role": "user", "content": message}
 		)
