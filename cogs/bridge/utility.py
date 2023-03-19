@@ -64,7 +64,7 @@ class Utility(Cog):
 		
 		await ctx.respond(f"`{result}`")
 	
-	@bridge_command(aliases=["chat"], description="talk to chatgpt", usage="os.chatgpt r>prompt", brief="os.chatgpt Hello")
+	@bridge_command(aliases=["chat"], description="talk to chatgpt.\nnote: if console doesn't answer for a long time just run command again.", usage="os.chatgpt r>prompt", brief="os.chatgpt Hello")
 	@option("prompt", required=True)
 	async def chatgpt(self, ctx, *, prompt: str):
 		message = await reply(ctx, "`please wait a minute.`")
@@ -76,6 +76,7 @@ class Utility(Cog):
 		except asyncio.TimeoutError:
 			return await message.edit("`sorry, there was an unknown error. try again later.`")
 		
+		# split content cuz of discord character limit
 		result = []
 		for i in range(0, len(completion), 1980):
 			result.append(completion[i:i+1980])
@@ -84,7 +85,7 @@ class Utility(Cog):
 		for content in result:
 			await ctx.send(f"`{content}")
 	
-	@bridge_command(aliases=["chatgpt-erase", "chat-erase", "erase_dialogue"])
+	@bridge_command(aliases=["chatgpt-erase", "chat-erase", "erase_dialogue"], description="erase dialogue with chatgpt", usage="os.chatgpt_erase_dialogue", brief="os.chatgpt-erase")
 	async def chatgpt_erase_dialogue(self, ctx):
 		chatgpt = ChatGPT(ctx.author.id)
 		await chatgpt.erase_dialogue()
