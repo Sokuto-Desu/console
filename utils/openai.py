@@ -21,7 +21,7 @@ class ChatGPT:
 	def prompt(self, message: str):
 		self.messages = self.db.get(self.user_id)
 		
-		if len(self.messages) >= self.conversation_limit:
+		if len(self.messages) > self.conversation_limit:
 			self.db.set(self.user_id, [None])
 			self.messages = [None]
 		
