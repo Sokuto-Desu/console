@@ -1,7 +1,8 @@
-from utils import make_embed, ChatGPT
+import re, asyncio
+
+from utils import make_embed, ChatGPT, reply
 from random import choice, randint
 from base64 import b64decode, b64encode
-from asyncio import wait_for, TimeoutError
 
 from discord.ext.commands import Cog, MemberConverter, command
 from discord.ext.bridge import bridge_command
@@ -39,10 +40,10 @@ class Utility(Cog):
 		await ctx.respond(f"`{choice(choices)}`")
 	
 	
-	@bridge_command(aliases=["b64", "64"], description="base64 encode/decode", usage="os.b")
+	@bridge_command(aliases=["b64", "64"], description="base64 encode/decode", usage="os.base64 r>encode/decode r>data", brief="os.b64 encode Hello world! // os.64 decode SGVsbG8gd29ybGQh")
 	@option("mode", required=True, choices=["encode", "decode"])
 	@option("data", required=True)
-	async def base64(self, ctx, mode: str, data: str):
+	async def base64(self, ctx, mode: str, *, data: str):
 		databytes = data.encode("utf-8")
 		result = b64encode(databytes) if mode == "encode" else b64decode(databytes)
 		result = result.decode("utf-8")
@@ -50,27 +51,29 @@ class Utility(Cog):
 		await ctx.respond(f"`{result}`")
 	
 	
-	@bridge_command(description="character to unicode / unicode to character")
+	@bridge_command(aliases=["uni"], description="character to unicode / unicode to character", usage="os.unicode r>character/unicode r>unicode or any symbol", brief="os.unicode character 0097 // os.uni unicode a")
 	@option("get", required=True, choices=["character", "unicode"])
 	@option("data", description='example: 0097 or 97 (small letter "a") | • (U+2022)', required=True)
 	async def unicode(self, ctx, get: str, data: str):
 		if get == "character":
-			result = chr(int(data))
+			numbers = re.search(r"(\d+)", data).group()
+			result = chr(int(numbers))
 		else:
 			code = ord(data[0])
 			result = f"U+{code}"
 		
 		await ctx.respond(f"`{result}`")
 	
-	@command(aliases=["chat"])
-	async def chatgpt(self, ctx, *, prompt):
-		message = await ctx.send("`please wait a minute.`")
+	@bridge_command(aliases=["chat"], description="talk to chatgpt", usage="os.chatgpt r>prompt", brief="os.chatgpt Hello")
+	@option("prompt", required=True)
+	async def chatgpt(self, ctx, *, prompt: str):
+		message = await reply(ctx, "`please wait a minute.`")
 		
 		chatgpt = ChatGPT(ctx.author.id)
 		
 		try:
-			completion = await wait_for(chatgpt.prompt(prompt), timeout=150)
-		except TimeoutError:
+			completion = await asyncio.wait_for(chatgpt.prompt(prompt), timeout=150)
+		except asyncio.TimeoutError:
 			return await message.edit("`sorry, there was an unknown error. try again later.`")
 		
 		result = []
@@ -80,6 +83,13 @@ class Utility(Cog):
 		await message.edit(f"`[conversation limit: {chatgpt.user_limit_status}]`\n{result.pop(0)}")
 		for content in result:
 			await ctx.send(f"`{content}")
+	
+	@bridge_command(aliases=["chatgpt-erase", "chat-erase", "erase_dialogue"])
+	async def chatgpt_erase_dialogue(self, ctx):
+		chatgpt = ChatGPT(ctx.author.id)
+		await chatgpt.erase_dialogue()
+		
+		await reply(ctx, "`dialogue erased.`")
 
 
 def setup(bot):

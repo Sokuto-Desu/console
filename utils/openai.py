@@ -64,3 +64,7 @@ class ChatGPT:
 		self.db.set(self.user_id, self.messages)
 		
 		return result_message.content
+	
+	async def erase_dialogue(self):
+		self.db.set(self.user_id, [None])
+		self.messages = [None]
