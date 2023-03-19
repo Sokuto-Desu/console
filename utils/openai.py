@@ -21,7 +21,7 @@ class ChatGPT:
 	
 	
 	def count_user_messages(self):
-		user_messages = 0
+		user_messages = 1
 		for message in self.messages:
 			if not message:
 				return 1
