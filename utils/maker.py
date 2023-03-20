@@ -33,7 +33,6 @@ class CustomButton(Button):
 		self.disabled = disabled
 		self.ephemeral = ephemeral
 		self.callback_arg = callback
-		print(self)
 	
 	
 	async def callback(self, inter):

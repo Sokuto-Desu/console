@@ -9,16 +9,20 @@ from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_command
 
 
-class Owner(Cog):
+class Owner(
+	Cog,
+	commands_attrs=dict(
+		hidden=True,
+		guild_ids=[devserver])
+	):
 	def __init__(self, bot):
 		self.bot = bot
-	
 	
 	async def cog_check(self, ctx):
 		return await self.bot.is_owner(ctx.author)
 	
 	
-	@bridge_command(hidden=True, guild_ids=[devserver])
+	@bridge_command(aliases=["code"])
 	@option("mode", required=True, choices=["eval", "exec"])
 	@option("data", required=True)
 	async def run(self, ctx, mode: str, *, data: str):
@@ -47,7 +51,7 @@ get_running_loop().create_task(__ex())""",
 			globals_)
 	
 	
-	@bridge_command(aliases=["sd"], hidden=True, guild_ids=[devserver])
+	@bridge_command(aliases=["sd"])
 	async def shutdown(self, ctx):
 		await reply(ctx, "`closing connection...`")
 		await self.bot.close()

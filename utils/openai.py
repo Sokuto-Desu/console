@@ -39,11 +39,6 @@ class GPT:
 		
 		self.user_limit_status = f"{user_messages_amount}/{self.conversation_limit}"
 	
-	
-	async def update_messages(self, messages: list):
-		self.db.set(self.user_id, messages)
-		self.messages = messages
-	
 	async def erase_dialogue(self):
 		await self.set_messages([None])
 	
@@ -70,11 +65,11 @@ class GPT:
 				)
 			)
 		except openai.error.RateLimitError:
-			return "I am currently overloaded with requests. Try later."
+			return "I am currently overloaded with requests. Try again later."
 		
 		assistant_message = completion.choices[0].message
 		
 		self.messages.append(assistant_message)
-		await update_messages(self.messages)
+		self.db.set(self.user_id, self.messages)
 		
 		return assistant_message.content

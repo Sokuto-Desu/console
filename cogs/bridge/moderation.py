@@ -1,7 +1,7 @@
 from typing import Optional
 from utils import reply
 
-from discord import option, Member
+from discord import option, Member, slash_command, ApplicationContext
 from discord.ext.commands import Cog, has_permissions, MemberConverter, command
 from discord.ext.bridge import bridge_command
 
@@ -11,12 +11,7 @@ class Moderation(Cog):
 		self.bot = bot
 	
 	
-	@command(aliases=["c", "purge"], help="purge specific amount of messages in channel", usage="os.clear >amount -user (id or mention) -contains")
-	@has_permissions(manage_messages = True)
-#	@option("amount", int, description="amount of messages to clear", required=True)
-#	@option("user", Member, description="clear filter: user", required=False, default=None)
-#	@option("contains", str, description="clear filter: message content", required=False, default=None)
-	async def clear(self, ctx, amount: int = 1, user: Optional[MemberConverter] = None, contains: str = None):
+	async def clear_command(self, ctx, user, contains):
 		def clear_check(message):
 			result = True
 			
@@ -25,12 +20,36 @@ class Moderation(Cog):
 			if contains:
 				result = contains in message.content and result
 			
-			return result or message == ctx.message 
-		
+			if not isinstance(ctx, ApplicationContext):
+				result = result or message == ctx.message
+			
+			return result
 		
 		cleared = await ctx.channel.purge(limit=amount + 1, check=clear_check)
 		
-		await reply(ctx, f"`{len(cleared) - 1} messages cleared.`", delete_after=1.5)
+		await reply(ctx, f"`successfully cleared {len(cleared) - 1} messages.`", delete_after=1.5)
+	
+	
+	@command(
+		aliases=["c", "purge"],
+		description="purge specific amount of messages in channel",
+		usage="os.clear r>amount n>user (id or mention) n>contains",
+		brief="os.c 50 @Console#3862 // os.c 50 N-word"
+	)
+	@has_permissions(manage_messages=True)
+	async def clear(self, ctx, amount: int = 1, user: Optional[MemberConverter] = None, contains: str = None):
+		await self.clear_command(ctx, user, contains)
+	
+	@slash_command(description="purge specific amount of messages in channel")
+	@default_permissions(manage_messages=True)
+	@option("amount", int, description="amount of messages to clear",
+			required=True)
+	@option("user", Member, description="clear filter: user",
+			required=False, default=None)
+	@option("contains", str, description="clear filter: message content",
+			required=False, default=None)
+	async def clear():
+		await self.clear_command(ctx, user, contains)
 
 
 

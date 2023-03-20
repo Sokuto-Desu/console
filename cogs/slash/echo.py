@@ -12,7 +12,7 @@ class Echo(Cog):
 		self.bot = bot
 	
 	
-	@slash_command(description="echo (/embed replacement). /info echo for more info")
+	@slash_command(description='echo (/embed replacement). "/info echo" for more info')
 	@option("content", description="any text",
 			required=False, default=None)
 	@option("title", description="any text",
@@ -29,7 +29,7 @@ class Echo(Cog):
 			required=False, default=None)
 	@option("thumbnail", description="url of embeds thumbnail",
 			required=False, default=None)
-	@option("buttons", description="message buttons. check",
+	@option("buttons", description='message buttons. check "/info echo" for more info.',
 			required=False, default=None)
 	@option("id", description="id of message sent by Console. use this to edit existing message.",
 			required=False, default=None)
@@ -55,8 +55,7 @@ class Echo(Cog):
 				color = Colour.from_rgb(
 					randint(0, 255), 
 					randint(0, 255), 
-					randint(0, 255)
-					).value
+					randint(0, 255)).value
 			else:
 				color = int(color, 16) 
 			
@@ -64,9 +63,9 @@ class Echo(Cog):
 				title=title,
 				description=description,
 				color=color,
-				footer={"text": footer},
-				image={"url": image},
-				thumbnail={"url": thumbnail},
+				footer=dict(text=footer),
+				image=dict(url=image),
+				thumbnail=dict(url=image),
 				fields=fields_list
 			)
 		
@@ -79,7 +78,7 @@ class Echo(Cog):
 					message = await ctx.channel.fetch_message(int(id))
 					await message.edit(content=content, embed=embed)
 					
-					await ctx.respond("`embed succesfully edited.`", ephemeral=True)
+					await ctx.respond("`message succesfully edited.`", ephemeral=True)
 				except MessageNotFound:
 					await ctx.respond("`can't found message. check if this message exists in current channel.`", ephemeral=True)
 			return
