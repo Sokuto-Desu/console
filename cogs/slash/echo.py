@@ -38,9 +38,8 @@ class Echo(Cog):
 					color: str, fields: str, image: str,
 					thumbnail: str, buttons: str, id: str):
 		
-		
-		fields_list = []
 		if fields:
+			fields_list = []
 			fields = fields.split("-add")[1:] # [1:] to remove empty string
 			for field in fields:
 				field = field.split("//") # splits to [name, value]
@@ -52,7 +51,14 @@ class Echo(Cog):
 		if not any((title, description, footer, image, thumbnail, fields)):
 			embed = None
 		else:
-			color = int(color, 16) if color else Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+			if not color:
+				color = Colour.from_rgb(
+					randint(0, 255), 
+					randint(0, 255), 
+					randint(0, 255)
+					).value
+			else:
+				color = int(color, 16) 
 			
 			embed = make_embed(
 				title=title,
@@ -83,7 +89,7 @@ class Echo(Cog):
 			buttons = buttons.split(";")
 			buttons_list = []
 			for button in buttons:
-				buttons_list.append(literal_eval(button))
+				buttons_list.append(literal_eval(button)) # "{}" to {}
 			
 			view = View()
 			for button in make_buttons(buttons_list):

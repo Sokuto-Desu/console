@@ -1,6 +1,6 @@
 import re, asyncio
 
-from utils import make_embed, ChatGPT, reply
+from utils import make_embed, GPT, reply
 from random import choice, randint
 from base64 import b64decode, b64encode
 
@@ -84,7 +84,7 @@ class Utility(Cog):
 	
 	@bridge_command(
 		aliases=["chat"],
-		description="talk to chatgpt.\nnote: if console doesn't answer for a long time just run command again.",
+		description="talk to chatgpt (gpt-3.5).\nnote: if console doesn't answer for a long time just run command again.",
 		usage="os.chatgpt r>prompt",
 		brief="os.chatgpt Hello"
 	)
@@ -92,7 +92,7 @@ class Utility(Cog):
 	async def chatgpt(self, ctx, *, prompt: str):
 		message = await reply(ctx, "`please wait a minute.`")
 		
-		chatgpt = ChatGPT(ctx.author.id)
+		gpt = GPT(ctx.author.id)
 		
 		try:
 			completion = await asyncio.wait_for(chatgpt.prompt(prompt), timeout=150)

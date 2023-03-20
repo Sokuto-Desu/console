@@ -3,7 +3,7 @@ from deta import Deta
 
 
 class Database:
-	def __init__(self, base_name="ConsoleDB"):
+	def __init__(self, base_name):
 		self.collection = Deta(deta_key)
 		self.base = self.collection.Base(base_name)
 	

@@ -1,12 +1,11 @@
-import random
+import sys
 
 from settings import devserver
-from asyncio import get_running_loop, sleep
+from asyncio import get_running_loop
 from utils import reply
-from core import Database
 
 from discord import option
-from discord.ext.commands import Cog, command
+from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_command
 
 
@@ -29,28 +28,30 @@ class Owner(Cog):
 			except SyntaxError:
 				result = await eval(data)
 			
-			await ctx.respond(f"```py\n{result}```")
+			await reply(ctx, f"```py\n{result}```")
 		
 		elif mode == "exec":
 			# insert two tabs to every line except first
 			tabed_code = "\n\t\t".join(data.split("\n"))
 			
-			_running_loop = get_running_loop()
+			globals_ = globals().update({"self": self, "bot": self.bot, "ctx": ctx})
 			
-			return exec(f"""
+			return exec(
+			f"""
 async def __ex():
 	try:
 		{tabed_code}
 	except Exception as e:
 		await ctx.respond(str(e)[:1995])
-_running_loop.create_task(__ex())""", globals().update({"self": self, "bot": self.bot, "ctx": ctx}))
+get_running_loop().create_task(__ex())""",
+			globals_)
 	
 	
 	@bridge_command(aliases=["sd"], hidden=True, guild_ids=[devserver])
 	async def shutdown(self, ctx):
 		await reply(ctx, "`closing connection...`")
 		await self.bot.close()
-		quit()
+		sys.quit()
 
 
 def setup(bot):
