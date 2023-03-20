@@ -38,8 +38,8 @@ class Echo(Cog):
 					color: str, fields: str, image: str,
 					thumbnail: str, buttons: str, id: str):
 		
+		fields_list = []
 		if fields:
-			fields_list = []
 			fields = fields.split("-add")[1:] # [1:] to remove empty string
 			for field in fields:
 				field = field.split("//") # splits to [name, value]
