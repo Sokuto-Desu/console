@@ -32,18 +32,18 @@ class CustomButton(Button):
 		
 		self.disabled = disabled
 		self.ephemeral = ephemeral
-		self.callback = callback
+		self.callback_arg = callback
 		print(self)
 	
 	
 	async def callback(self, inter):
-		if not self.callback or self.disabled:
+		if not self.callback_arg or self.disabled:
 			return
 		
-		if isinstance(self.callback, str):
-			await inter.response.send_message(content=self.callback, ephemeral=self.ephemeral)
+		if isinstance(self.callback_arg, str):
+			await inter.response.send_message(content=self.callback_arg, ephemeral=self.ephemeral)
 		else:
-			await inter.response.send_message(**callback)
+			await inter.response.send_message(**self.callback_arg)
 
 
 def make_embed(**parameters) -> Embed:
