@@ -11,7 +11,7 @@ from discord.ext.bridge import bridge_command
 
 class Owner(
 	Cog,
-	commands_attrs=dict(
+	command_attrs=dict(
 		hidden=True,
 		guild_ids=[devserver])
 	):
