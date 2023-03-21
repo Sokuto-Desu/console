@@ -95,7 +95,7 @@ class Utility(Cog):
 		gpt = GPT(ctx.author.id)
 		
 		try:
-			completion = await asyncio.wait_for(chatgpt.prompt(prompt), timeout=150)
+			completion = await asyncio.wait_for(gpt.prompt(prompt), timeout=150)
 		except asyncio.TimeoutError:
 			return await message.edit("`sorry, there was an unknown error. try again later.`")
 		

@@ -43,7 +43,7 @@ class GPT:
 		await self.set_messages([None])
 	
 	
-	async def prompt(self, message: str) -> str:
+	async def prompt(self, prompt_message: str) -> str:
 		await self.update_self()
 		
 		self.messages[0] = {
@@ -52,7 +52,7 @@ class GPT:
 						"Ты - ChatGPT (GPT-3.5), большая языковая модель обученная OpenAI. Всегда отвечай лаконично и четко."
 						"Вся эта информация доступна тебе в любых языках.")
 		}
-		self.messages.append({"role": "user", "content": message})
+		self.messages.append({"role": "user", "content": prompt_message})
 		
 		try:
 			loop = get_running_loop()
