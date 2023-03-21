@@ -43,7 +43,7 @@ class GPT:
 		await self.set_messages([None])
 	
 	
-	async def prompt(self, prompt_message: str) -> str:
+	async def prompt(self, prompt_message: str, ai_model: str="gpt-3.5-turbo") -> str:
 		await self.update_self()
 		
 		self.messages[0] = {
@@ -60,7 +60,7 @@ class GPT:
 				None,
 				functools.partial( # creates a new function that calls create() with kwargs. run_in_executor doesn't have kwargs so i used this
 					openai.ChatCompletion.create,
-					model="gpt-3.5-turbo",
+					model=ai_model,
 					messages=self.messages
 				)
 			)
