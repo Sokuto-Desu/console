@@ -104,7 +104,7 @@ class Utility(Cog):
 		for i in range(0, len(completion), 1980):
 			result.append(completion[i:i+1980])
 		
-		await message.edit(f"`[conversation limit: {chatgpt.user_limit_status}]`\n{result.pop(0)}")
+		await message.edit(f"`[conversation limit: {gpt.user_limit_status}]`\n{result.pop(0)}")
 		for content in result:
 			await ctx.send(f"`{content}")
 	
