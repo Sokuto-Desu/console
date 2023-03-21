@@ -41,7 +41,7 @@ class GPT:
 	
 	async def erase_dialogue(self):
 		self.messages = [None]
-		self.db.set(seld.user_id, [None])
+		self.db.set(self.user_id, [None])
 	
 	
 	async def prompt(self, prompt_message: str, ai_model: str="gpt-3.5-turbo") -> str:
