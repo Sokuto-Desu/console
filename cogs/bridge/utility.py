@@ -115,8 +115,8 @@ class Utility(Cog):
 		brief="os.chatgpt-erase"
 	)
 	async def chatgpt_erase_dialogue(self, ctx):
-		chatgpt = ChatGPT(ctx.author.id)
-		await chatgpt.erase_dialogue()
+		gpt = GPT(ctx.author.id)
+		await gpt.erase_dialogue()
 		
 		await reply(ctx, "`dialogue erased.`")
 
