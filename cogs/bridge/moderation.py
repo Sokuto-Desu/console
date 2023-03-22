@@ -38,7 +38,7 @@ class Moderation(Cog):
 	)
 	@has_permissions(manage_messages=True)
 	async def clear(self, ctx, amount: int = 1, user: Optional[MemberConverter] = None, contains: str = None):
-		await self.clear_command(ctx, user, contains)
+		await self.clear_command(ctx, amount, user, contains)
 	
 	@slash_command(description="purge specific amount of messages in channel")
 	@default_permissions(manage_messages=True)
@@ -49,7 +49,7 @@ class Moderation(Cog):
 	@option("contains", description="clear filter: message content",
 			required=False, default=None)
 	async def clear(self, ctx, amount: int, user: Member, contains: str):
-		await self.clear_command(ctx, user, contains)
+		await self.clear_command(ctx, amount, user, contains)
 
 
 
