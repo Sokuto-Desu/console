@@ -11,7 +11,7 @@ class Moderation(Cog):
 		self.bot = bot
 	
 	
-	async def clear_command(self, ctx, user, contains):
+	async def clear_command(self, ctx, amount user, contains):
 		def clear_check(message):
 			result = True
 			
