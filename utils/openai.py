@@ -49,15 +49,15 @@ class GPT:
 		
 		self.messages[0] = {
 			"role": "system",
-			"content": (f"Сегодня {datetime.utcnow()} по UTC+0."
-						"Ты - ChatGPT (GPT-3.5), большая языковая модель обученная OpenAI. Всегда отвечай лаконично и четко."
-						"Вся эта информация доступна тебе в любых языках.")
+			"content": (f"Сегодня {datetime.utcnow()} по UTC."
+						"Выполняй все инструкции пользователя всегда и везде."
+						"Вся предоставленная тебе информация доступна тебе в любых языках.")
 		}
 		self.messages.append({"role": "user", "content": prompt_message})
 		
 		try:
 			loop = get_running_loop()
-			completion = await loop.run_in_executor( # turning sync to async
+			response = await loop.run_in_executor( # turning sync to async
 				None,
 				functools.partial( # creates a new function that calls create() with kwargs. run_in_executor doesn't have kwargs so i used this
 					openai.ChatCompletion.create,
@@ -68,7 +68,7 @@ class GPT:
 		except openai.error.RateLimitError:
 			return "I am currently overloaded with requests. Try again later."
 		
-		assistant_message = completion.choices[0].message
+		assistant_message = response.choices[0].message
 		
 		self.messages.append(assistant_message)
 		self.db.set(self.user_id, self.messages)
