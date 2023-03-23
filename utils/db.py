@@ -8,15 +8,14 @@ class Database:
 		self.base = self.collection.Base(base_name)
 	
 	
-	def set(self, key: str, value):
-		return self.base.put(key=key, data=value)
+	def set(self, key: str, to):
+		return self.base.put(key=key, data=to)
 	
-	def get(self, key: str):
-		item = self.base.get(key=key)
-		if item:
+	def get(self, key: str, default=None):
+		if item := self.base.get(key=key):
 			return item["value"]
 		else:
-			return None
+			return self.set(key=key, to=default)["value"]
 	
 	def delete(self, key: str):
 		self.base.delete(key=key) # deta delete method always returns None so

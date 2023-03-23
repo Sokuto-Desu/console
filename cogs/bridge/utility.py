@@ -21,7 +21,7 @@ class Utility(Cog):
 	)
 	@option("member", required=False, default=None)
 	async def avatar(self, ctx, member: MemberConverter=None):
-		member = ctx.author if member is None else member
+		member = member or ctx.author
 		
 		embed = make_embed(
 			title = f"`{member}'s avatar`",
@@ -82,24 +82,28 @@ class Utility(Cog):
 		
 		await ctx.respond(f"`{result}`")
 	
+	
 	@bridge_command(
-		aliases=["chat"],
-		description="talk to chatgpt (gpt-3.5).\nnote: if console doesn't answer for a long time just run command again.",
+		aliases=["chatgpt", "chat"],
+		description=(
+			"talk to chatgpt (gpt-3.5).\n"
+			"note: if console doesn't answer for a long time just run command again."
+		),
 		usage="os.chatgpt r>prompt",
 		brief="os.chatgpt Hello"
 	)
 	@option("prompt", required=True)
-	async def chatgpt(self, ctx, *, prompt: str):
-		message = await reply(ctx, "`please wait a minute.`")
+	async def gpt(self, ctx, *, prompt: str):
+		message = await reply(ctx, "`please wait a minute. prompt is processing.`")
 		
-		gpt = GPT(ctx.author.id)
+		gpt35 = GPT(ctx.author.id)
 		
 		try:
-			completion = await asyncio.wait_for(gpt.prompt(prompt), timeout=150)
+			completion = await asyncio.wait_for(gpt35.prompt(prompt), timeout=150)
 		except asyncio.TimeoutError:
 			return await message.edit("`sorry, there was an unknown error. try again later.`")
 		
-		# split content cuz of discord character limit
+		# split the content to fit in the discord limit of characters
 		result = []
 		for i in range(0, len(completion), 1980):
 			result.append(completion[i:i+1980])
@@ -109,14 +113,14 @@ class Utility(Cog):
 			await ctx.send(f"`{content}")
 	
 	@bridge_command(
-		aliases=["chatgpt-erase", "chat-erase", "erase_dialogue", "erase-chat", "erase-chatgpt", "ed"],
-		description="erase dialogue with chatgpt",
-		usage="os.chatgpt_erase_dialogue",
-		brief="os.chatgpt-erase"
+		aliases=["chatgpt-erase", "chat-erase", "erase_dialogue", "erase-chat", "erase-chatgpt", "erase-gpt", "erase_conversation", "ed"],
+		description="erase dialogue with gpt-3.5",
+		usage="os.gpt_erase_dialogue",
+		brief="os.ed"
 	)
-	async def chatgpt_erase_dialogue(self, ctx):
-		gpt = GPT(ctx.author.id)
-		await gpt.erase_dialogue()
+	async def gpt_erase_dialogue(self, ctx):
+		gpt35 = GPT(ctx.author.id)
+		await gpt35.erase_dialogue()
 		
 		await reply(ctx, "`dialogue erased.`")
 
