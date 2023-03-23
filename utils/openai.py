@@ -15,7 +15,7 @@ class GPT:
 		self.messages = self.db.get(self.user_id, default=[None])
 		
 		self.conversation_limit = self.db.get("limit", default=5)
-		self.user_limit_status = self.count_user_messages()
+		self.user_limit_status = f"{self.count_user_messages()}/{self.conversation_limit}"
 		
 		self.default_system_message = (
 			f"Today is {datetime.utcnow()} by UTC. "
@@ -32,7 +32,7 @@ class GPT:
 			if message.get("role") == "user":
 				user_messages_amount += 1
 		
-		return f"{user_messages_amount}/{self.conversation_limit}"
+		return user_messages_amount
 	
 	async def update_limit_status(self) -> None:
 		user_messages_amount = self.count_user_messages()
