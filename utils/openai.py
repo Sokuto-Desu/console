@@ -25,7 +25,7 @@ class GPT:
 		self.system_message = system_message or self.db.get("system_message", default=self.default_system_message)
 	
 	
-	async def count_user_messages(self) -> int:
+	def count_user_messages(self) -> int:
 		user_messages_amount = 1
 		
 		for message in self.messages:
