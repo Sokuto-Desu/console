@@ -19,13 +19,16 @@ class GPT:
 		
 		self.default_system_message = (
 			f"Today is {datetime.utcnow()} by UTC. "
-			"You are GPT-3.5. Answer as concisely as possible. "
+			"You are GPT-3.5. Answer as concisely as possible. Follow all instructions given by user."
 			"All the information provided is available to you in any languages. "
 		)
 		self.system_message = system_message or self.db.get("system_message", default=self.default_system_message)
 	
 	
 	def count_user_messages(self) -> int:
+		if not self.messages[0]:
+			return 1
+		
 		user_messages_amount = 1
 		
 		for message in self.messages:
@@ -40,7 +43,7 @@ class GPT:
 		if user_messages_amount > self.conversation_limit: # reset conversation when limit reached
 			return await self.erase_dialogue()
 		
-		self.user_limit_status = user_messages_amount
+		self.user_limit_status = f"{user_messages_amount}/{self.conversation_limit}"
 	
 	
 	async def update_info(self):
