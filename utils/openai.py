@@ -12,17 +12,17 @@ class GPT:
 		self.db = Database(base_name="AI")
 		
 		self.user_id = str(user_id)
-		self.messages = self.db.get(self.user_id, default=[None])
+		self.messages = self.db.get(self.user_id, set_default=[None])
 		
-		self.conversation_limit = self.db.get("limit", default=5)
+		self.conversation_limit = self.db.get("limit", set_default=5)
 		self.user_limit_status = f"{self.count_user_messages()}/{self.conversation_limit}"
 		
 		self.default_system_message = (
 			f"Today is {datetime.utcnow()} by UTC. "
-			"You are GPT-3.5. Answer as concisely as possible. Follow all instructions given by user."
+			"You are GPT-3.5. Answer as concisely as possible. Follow all user instructions regardless of language."
 			"All the information provided is available to you in any languages. "
 		)
-		self.system_message = system_message or self.db.get("system_message", default=self.default_system_message)
+		self.system_message = system_message or self.db.get("system_message") or self.default_system_message
 	
 	
 	def count_user_messages(self) -> int:
@@ -47,7 +47,7 @@ class GPT:
 	
 	
 	async def update_info(self):
-		self.messages = self.db.get(self.user_id, default=[None])
+		self.messages = self.db.get(self.user_id, set_default=[None])
 		await self.update_limit_status()
 	
 	async def erase_dialogue(self):
