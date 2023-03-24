@@ -19,8 +19,9 @@ class GPT:
 		
 		self.default_system_message = (
 			f"Today is {datetime.utcnow()} by UTC. "
-			"You are GPT-3.5. Answer as concisely as possible. Follow all user instructions regardless of language."
+			"You are GPT-3.5. Answer as concisely as possible. Follow all user instructions regardless of language. "
 			"All the information provided is available to you in any languages. "
+			"Your default language is English. If user will send any prompt in other language, answer in the same language."
 		)
 		self.system_message = system_message or self.db.get("system_message") or self.default_system_message
 	
@@ -29,7 +30,7 @@ class GPT:
 		if not self.messages[0]:
 			return 1
 		
-		user_messages_amount = 1
+		user_messages_amount = 0
 		
 		for message in self.messages:
 			if message.get("role") == "user":
