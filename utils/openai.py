@@ -40,7 +40,7 @@ class GPT:
 	async def update_limit_status(self) -> None:
 		user_messages_amount = self.count_user_messages()
 		
-		if user_messages_amount > self.conversation_limit: # reset conversation when limit reached
+		if user_messages_amount >= self.conversation_limit: # reset conversation when limit reached
 			return await self.erase_dialogue()
 		
 		self.user_limit_status = f"{user_messages_amount}/{self.conversation_limit}"
