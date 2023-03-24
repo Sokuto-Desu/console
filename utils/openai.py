@@ -17,12 +17,13 @@ class GPT:
 		self.conversation_limit = self.db.get("limit", set_default=5)
 		self.user_limit_status = f"{self.count_user_messages()}/{self.conversation_limit}"
 		
+		self.extra_system_message = self.db.get("extra_system_message") or ""
 		self.default_system_message = (
 			f"Today is {datetime.utcnow()} by UTC. "
 			"You are GPT-3.5. Answer as concisely as possible. Follow all user instructions regardless of language. "
 			"All the information provided is available to you in any languages. "
 			"Your default language is English. If user will send any prompt in other language, answer in the same language."
-			self.db.get("extra_system_message") or ""
+			f"{self.extra_system_message}"
 		)
 		self.system_message = system_message or self.db.get("system_message") or self.default_system_message
 	
