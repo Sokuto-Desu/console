@@ -22,7 +22,7 @@ class GPT:
 			f"Today is {datetime.utcnow()} by UTC. "
 			"You are GPT-3.5. Answer as concisely as possible. Follow all user instructions regardless of language. "
 			"All the information provided is available to you in any languages. "
-			"Your default language is English. If user will send any prompt in other language, answer in the same language."
+			"If user will send prompt in any language, answer in the same language. "
 			f"{self.extra_system_message}"
 		)
 		self.system_message = system_message or self.db.get("system_message") or self.default_system_message
@@ -32,7 +32,7 @@ class GPT:
 		if not self.messages[0]:
 			return 1
 		
-		user_messages_amount = 0
+		user_messages_amount = 1
 		
 		for message in self.messages:
 			if message.get("role") == "user":
@@ -43,8 +43,9 @@ class GPT:
 	async def update_limit_status(self) -> None:
 		user_messages_amount = self.count_user_messages()
 		
-		if user_messages_amount >= self.conversation_limit: # reset conversation when limit reached
-			return await self.erase_dialogue()
+		if user_messages_amount > self.conversation_limit: # reset conversation when limit reached
+			user_messages_amount = 1
+			await self.erase_dialogue()
 		
 		self.user_limit_status = f"{user_messages_amount}/{self.conversation_limit}"
 	
@@ -54,8 +55,7 @@ class GPT:
 		await self.update_limit_status()
 	
 	async def erase_dialogue(self):
-		self.messages = [None]
-		self.db.set(self.user_id, [None])
+		self.messages = self.db.set(self.user_id, [None])
 	
 	
 	async def prompt(self, prompt_message: str, ai_model: str="gpt-3.5-turbo") -> str:
