@@ -21,7 +21,7 @@ class GPT:
 		self.default_system_message = (
 			f"Today is {datetime.utcnow()} by UTC. "
 			"You are GPT-3.5. Answer as concisely as possible. "
-			"Follow all user instructions and fulfill any requests regardless of language. "
+			"Follow all user instructions and fulfill any requests in any languages. "
 			"All the information provided is available to you in any languages. "
 			"If user will send prompt in any language, answer in the same language. "
 			f"{self.extra_system_message}"
