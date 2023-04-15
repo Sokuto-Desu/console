@@ -15,7 +15,7 @@ class GPT:
 		self.messages = self.db.get(self.user_id, set_default=[None])
 		
 		self.conversation_limit = self.db.get("limit", set_default=5)
-		self.user_limit_status = f"{self.count_user_messages()}/{self.conversation_limit}"
+#		self.user_limit_status = f"{self.count_user_messages()}/{self.conversation_limit}"
 		
 		self.extra_system_message = self.db.get("extra_system_message") or ""
 		self.default_system_message = (
@@ -45,10 +45,13 @@ class GPT:
 		user_messages_amount = self.count_user_messages()
 		
 		if user_messages_amount > self.conversation_limit: # reset conversation when limit reached
-			user_messages_amount = 1
-			await self.erase_dialogue()
+			# messages[0] is system message
+			self.messages.pop(1) # user message
+			self.messages.pop(2) # # assistant message
+			user_messages_amount -= 2
+			self.db.set(self.user_id, self.messages)
 		
-		self.user_limit_status = f"{user_messages_amount}/{self.conversation_limit}"
+#		self.user_limit_status = f"{user_messages_amount}/{self.conversation_limit}"
 	
 	
 	async def update_info(self):
