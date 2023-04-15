@@ -47,7 +47,7 @@ class GPT:
 		if user_messages_amount > self.conversation_limit: # reset conversation when limit reached
 			# messages[0] is system message
 			self.messages.pop(1) # user message
-			self.messages.pop(2) # # assistant message
+			self.messages.pop(1) # assistant message (user message is already deleted)
 			user_messages_amount -= 2
 			self.db.set(self.user_id, self.messages)
 		
