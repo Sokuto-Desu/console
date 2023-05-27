@@ -1,6 +1,5 @@
-import openai, functools
+import openai, functools, settings
 
-from settings import openai_api_key
 from datetime import datetime
 from asyncio import get_running_loop
 from .db import Database
@@ -8,7 +7,7 @@ from .db import Database
 
 class GPT:
 	def __init__(self, user_id: int, system_message: str=None):
-		openai.api_key = openai_api_key
+		openai.api_key = settings.openai_api_key
 		self.db = Database(base_name="AI")
 		
 		self.user_id = str(user_id)

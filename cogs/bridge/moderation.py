@@ -20,24 +20,27 @@ class Moderation(Cog):
 			if contains:
 				result = contains in message.content and result
 			
-			if not isinstance(ctx, ApplicationContext):
-				result = result or message == ctx.message
+			if not ctx.is_app:
+				result = result or message == ctx.message # clearing message of author
 			
 			return result
 		
-		cleared = await ctx.channel.purge(limit=amount + 1, check=clear_check)
+		amount = amount + 1 if not ctx.is_app else amount # 1 is message of author
 		
-		await reply(ctx, f"`successfully cleared {len(cleared) - 1} messages.`", delete_after=1.5)
+		cleared = await ctx.channel.purge(limit=amount, check=clear_check)
+		cleared_amount = len(cleared) - 1 if not ctx.is_app else len(cleared) # 1 is message of author
+		
+		await reply(ctx, f"`successfully cleared {cleared_amount} messages.`", delete_after=1.5)
 	
 	
 	@command(
-		aliases=["c", "purge"],
+		aliases=["clear", "purge", "c"],
 		description="purge specific amount of messages in channel",
 		usage="os.clear r>amount n>user (id or mention) n>contains",
 		brief="os.c 50 @Console#3862 // os.c 50 N-word"
 	)
 	@has_permissions(manage_messages=True)
-	async def clear(self, ctx, amount: int = 1, user: Optional[MemberConverter] = None, contains: str = None):
+	async def _clear(self, ctx, amount: int=1, user: Optional[MemberConverter]=None, contains: str=None):
 		await self.clear_command(ctx, amount, user, contains)
 	
 	@slash_command(description="purge specific amount of messages in channel")

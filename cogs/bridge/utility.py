@@ -4,9 +4,9 @@ from utils import make_embed, GPT, reply
 from random import choice, randint
 from base64 import b64decode, b64encode
 
-from discord.ext.commands import Cog, MemberConverter, command
+from discord.ext.commands import Cog, command
 from discord.ext.bridge import bridge_command
-from discord import option
+from discord import option, Member
 
 
 class Utility(Cog):
@@ -16,11 +16,11 @@ class Utility(Cog):
 	
 	@bridge_command(
 		description="get member avatar",
-		usage="os.avatar n>member", 
+		usage="os.avatar -member", 
 		brief="os.avatar @Console#3862"
 	)
 	@option("member", required=False, default=None)
-	async def avatar(self, ctx, member: MemberConverter=None):
+	async def avatar(self, ctx, member: Member=None):
 		member = member or ctx.author
 		
 		embed = make_embed(
@@ -32,7 +32,7 @@ class Utility(Cog):
 	
 	@bridge_command(
 		description="random choice",
-		usage="os.random r>number or choices",
+		usage="os.random >number or choices",
 		brief="os.random yes, no, probably // os.random 10"
 	)
 	@option("data", description="choice1, choice2, choice3 ... (random choice) | any number (random number choice)", required=True)
@@ -51,7 +51,7 @@ class Utility(Cog):
 	@bridge_command(
 		aliases=["b64", "64"],
 		description="base64 encode/decode",
-		usage="os.base64 r>encode/decode r>data",
+		usage="os.base64 >encode/decode >data",
 		brief="os.b64 encode Hello world! // os.64 decode SGVsbG8gd29ybGQh"
 	)
 	@option("mode", required=True, choices=["encode", "decode"])
@@ -67,7 +67,7 @@ class Utility(Cog):
 	@bridge_command(
 		aliases=["uni"],
 		description="character to unicode / unicode to character",
-		usage="os.unicode r>character/unicode r>unicode or any symbol",
+		usage="os.unicode >character/unicode >unicode or any symbol",
 		brief="os.unicode character 0097 // os.uni unicode a"
 	)
 	@option("get", required=True, choices=["character", "unicode"])
@@ -86,15 +86,15 @@ class Utility(Cog):
 	@bridge_command(
 		aliases=["chatgpt", "chat"],
 		description=(
-			"talk to chatgpt (gpt-3.5).\n"
+			"talk to chatgpt (gpt-3.5). "
 			"note: if console doesn't answer for a long time just run command again."
 		),
-		usage="os.chatgpt r>prompt",
+		usage="os.chatgpt >prompt",
 		brief="os.chatgpt Hello"
 	)
 	@option("prompt", required=True)
 	async def gpt(self, ctx, *, prompt: str):
-		message = await reply(ctx, "`please wait a minute. prompt is processing.`")
+		message = await reply(ctx, content="`please wait a minute. prompt is processing.`")
 		
 		gpt35 = GPT(ctx.author.id)
 		

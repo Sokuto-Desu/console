@@ -47,7 +47,7 @@ class CustomButton(Button):
 
 def make_embed(**parameters) -> Embed:
 	for parameter in ("footer", "title", "description"):
-		if parameters.get(parameter) in (None, Embed.Empty):
+		if parameters.get(parameter) is None:
 			try:
 				parameters.pop(parameter)
 			except KeyError:

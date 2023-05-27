@@ -1,21 +1,20 @@
-import openai
-
 from dotenv import load_dotenv
 from os import getenv, listdir
 from sys import argv
+from utils import Database
 
+settings_db = Database("settings")
 load_dotenv()
 
 prefix = ["os.", "cmd.", "Os.", "Cmd.", "OS.", "CMd.", "CMD."]
-owners = [898610134589243442]
+owners = settings_db.get("owners") or [898610134589243442]
 devserver = 942390181984608327
-activity = "/help"
+activity = settings_db.get("activity") or "/help"
 token = getenv("TOKEN")
 test_token = getenv("TEST_TOKEN")
 
 is_test = False if not "-t" in argv else True
-errors_channel = 989094089305772042
-deta_key = getenv("DETA_KEY")
+errors_channel = settings_db.get("errors_channel") or 989094089305772042
 openai_api_key = getenv("OPENAI_API_KEY")
 
 if is_test:
