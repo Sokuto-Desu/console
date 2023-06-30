@@ -31,6 +31,7 @@ class Utility(Cog):
 	
 	
 	@bridge_command(
+		aliases=["r"],
 		description="random choice",
 		usage="os.random >number or choices",
 		brief="os.random yes, no, probably // os.random 10"

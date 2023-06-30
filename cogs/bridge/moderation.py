@@ -3,7 +3,7 @@ from utils import reply
 
 from discord import option, Member, slash_command, ApplicationContext, default_permissions
 from discord.ext.commands import Cog, has_permissions, MemberConverter, command
-from discord.ext.bridge import bridge_command
+
 
 
 class Moderation(Cog):
