@@ -2,7 +2,7 @@ from utils import Database
 from asyncio import sleep
 from typing import Union
 
-from discord import option, TextChannel, ForumChannel, CategoryChannel, Thread
+from discord import option, TextChannel, ForumChannel, CategoryChannel, Thread, default_permissions
 from discord.ext.commands import Cog
 from discord.commands import SlashCommandGroup
 
@@ -22,7 +22,7 @@ class Filter(Cog):
 		
 		if blacklist != []: # blacklist is list of dicts
 			for word in blacklist:
-				if word["name"] in message.content:
+				if word["name"] in message.content.lower():
 					await sleep(word["wait"])
 					channel_id = int(word["channel"])
 					
@@ -41,6 +41,7 @@ class Filter(Cog):
 			required=False, default=0)
 	@option("channel", description="in which channel to delete messages (leave blank to apply to the entire server)",
 			required=False, default=None)
+	@default_permissions(manage_messages=True)
 	async def add(self, ctx, word: str, wait: float, channel: Union[TextChannel, Union[ForumChannel, CategoryChannel]]):
 		blacklist = self.filter_db.get(str(ctx.guild.id))
 		blacklist = [] if not blacklist else blacklist
@@ -63,6 +64,7 @@ class Filter(Cog):
 	@filter.command(description="remove words/symbols from filter blacklist")
 	@option("word", description="word/symbol to be removed from blacklist",
 			required=True)
+	@default_permissions(manage_messages=True)
 	async def remove(self, ctx, word: str):
 		blacklist = self.filter_db.get(str(ctx.guild.id))
 		if not blacklist:
