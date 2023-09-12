@@ -24,7 +24,10 @@ class Filter(Cog):
 			for word in blacklist:
 				if word["name"] in message.content.lower():
 					await sleep(word["wait"])
-					channel_id = int(word["channel"])
+					if channel := word["channel"]:
+						channel_id = int(channel)
+					else:
+						channel_id = None
 					
 					if (not channel_id or channel_id == message.channel.id # whole server or specific channel
 						or (isinstance(message.channel, Thread) and message.channel.parent.id == word["channel"]) # threads
