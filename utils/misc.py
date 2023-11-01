@@ -39,6 +39,7 @@ async def convert_time(time):
 
 
 
+# used for handling errors in bot.py
 async def handle_error(bot, ctx, error):
 	if isinstance(error, commands.MissingPermissions):
 		return await ctx.respond(f"`error. {error.message.lower()}`")

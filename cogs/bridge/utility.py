@@ -4,7 +4,7 @@ from utils import make_embed, GPT, reply
 from random import choice, randint
 from base64 import b64decode, b64encode
 
-from discord.ext.commands import Cog, command
+from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_command
 from discord import option, Member
 

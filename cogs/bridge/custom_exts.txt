@@ -1,0 +1,21 @@
+from utils.db import Database
+
+from discord.ext.commands import Cog
+from discord.ext.bridge import bridge_command
+
+class CustomCommands(Cog):
+	def __init__(self, bot):
+		self.bot = bot
+	
+	
+	@bridge_group()
+	async def custom_exts(self, ctx):
+		pass
+	
+	@custom.exts(
+		description="",
+		usage="",
+		brief=""
+	)
+	async def create(self, ctx, name: str, *, output):
+		

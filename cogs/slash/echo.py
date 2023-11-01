@@ -94,7 +94,7 @@ class Echo(Cog):
 			for button in make_buttons(buttons_list):
 				view.add_item(button)
 		
-		await ctx.delete()
+		await ctx.respond("ᅠ", delete_after=0)
 		await ctx.send(content=content, embed=embed, view=view)
 
 
