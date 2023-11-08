@@ -1,5 +1,6 @@
-git+https://github.com/Pycord-Development/pycord
+pycord
 python-dotenv
 requests
 deta
 openai
+python-rapidjson

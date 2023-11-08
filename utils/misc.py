@@ -1,4 +1,5 @@
 import settings
+
 from asyncio import sleep
 from traceback import format_exception
 
@@ -19,9 +20,6 @@ async def reply(ctx, *args, **kwargs):
 		else:
 			return await ctx.send(*args, **kwargs)
 
-async def close(message: Message, time: int=5):
-	await sleep(time)
-	await message.delete()
 
 # converts time (8m, 1h, 2d, etc.) to seconds
 async def convert_time(time):
@@ -38,20 +36,28 @@ async def convert_time(time):
 	return times
 
 
+# formats exception
+def get_traceback(error):
+	return "".join(
+		format_exception(
+			type(error),
+			error,
+			error.__traceback__
+		))
 
 # used for handling errors in bot.py
 async def handle_error(bot, ctx, error):
 	if isinstance(error, commands.MissingPermissions):
-		return await ctx.respond(f"`error. {error.message.lower()}`")
+		return await reply(f"`error. {error.message.lower()}`")
 	elif isinstance(error, commands.UserInputError):
-		return await ctx.respond(f"`error. incorrect argument(s). {str(error).lower()}`")
+		return await reply(f"`error. incorrect argument(s). {str(error).lower()}`")
 	elif isinstance(error, commands.CommandNotFound):
 		return
 	
 	
-	traceback = "".join(format_exception(type(error), error, error.__traceback__))
-	embed = Embed(
-		title=f"**{ctx.guild}**: **{ctx.channel}**: **{ctx.author}**",
+	traceback = "".join(get_traceback(error))
+	embed = Embed( # usually i use make_embed but circular import prevents me from it here
+		title=f"**{ctx.guild}: {ctx.channel}: {ctx.author}**",
 		description=f"```\n{traceback}```",
 		color=0x151515
 	)

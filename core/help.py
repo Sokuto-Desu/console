@@ -8,8 +8,7 @@ from discord.ext.commands import HelpCommand
 
 class ConsoleHelpCommand(HelpCommand):
 	async def send_bot_help(self, mapping):
-		for cog, commands in mapping.items():
-			pass
+		
 
 
 class HelpDropdown(Select):

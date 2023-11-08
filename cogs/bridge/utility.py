@@ -1,4 +1,5 @@
-import re, asyncio
+import re
+import asyncio
 
 from utils import make_embed, GPT, reply
 from random import choice, randint

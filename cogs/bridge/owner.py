@@ -1,8 +1,5 @@
-import sys
-
 from settings import devserver
-from asyncio import get_running_loop
-from utils import reply
+from utils import reply, get_traceback
 
 from discord import option
 from discord.ext.commands import Cog
@@ -31,31 +28,40 @@ class Owner(
 				result = eval(data)
 			except SyntaxError:
 				result = await eval(data)
+			except Exception as e:
+				result = f"```\n{get_traceback(e)}```"
 			
 			await reply(ctx, f"```py\n{result}```")
 		
-		elif mode == "exec":
-			# insert two tabs to every line except first
-			tabed_code = "\n\t\t".join(data.split("\n"))
+		else:
+			tabbed_code = "\n\t\t".join(data.split("\n")) # splits data by lines and tabs them (so execute() will work)
+			formatted_code = tabbed_code.replace("dprint", "await ctx.send") # for convenience ¯\_(ツ)_/¯
 			
-			globals_ = globals().update({"self": self, "bot": self.bot, "ctx": ctx})
+			_globals = globals().update(
+				{
+					"self": self,
+					"bot": self.bot,
+					"ctx": ctx,
+					"formatted_code": formatted_code
+				}
+			)
 			
-			return exec(
-			f"""
-async def __ex():
-	try:
-		{tabed_code}
-	except Exception as e:
-		await ctx.respond(str(e)[:1995])
-get_running_loop().create_task(__ex())""",
-			globals_)
+			exec(
+				"async def execute():"
+				"\n\ttry:"
+				f"\n\t\t{formatted_code}" # tab at the beginning cause tabbed_code tabbed every line except first
+				"\n\texcept Exception as e:"
+				"\n\t\tawait reply(ctx, get_traceback(e))"
+				"\nbot.loop.create_task(execute())",
+				_globals,
+				locals()
+			)
 	
 	
 	@bridge_command(aliases=["sd"])
 	async def shutdown(self, ctx):
 		await reply(ctx, "`closing connection...`")
 		await self.bot.close()
-		sys.exit()
 
 
 def setup(bot):

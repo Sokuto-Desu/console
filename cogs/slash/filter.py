@@ -1,4 +1,4 @@
-from utils import Database
+from db import DetaBase
 from asyncio import sleep
 from typing import Union
 
@@ -10,7 +10,7 @@ from discord.commands import SlashCommandGroup
 class Filter(Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.filter_db = Database("message_filter")
+		self.filter_db = DetaBase("message_filter")
 	
 	
 	@Cog.listener()

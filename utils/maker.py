@@ -10,13 +10,13 @@ class CustomButton(Button):
 		label: str 
 			any text
 		style: str 
-			primary, secondary, success, danger and aliases
+			primary, secondary, success, danger or aliases
 		callback: dict or str 
-			if str, argument will be used as callback respond content
+			if str, argument will be used as a callback respond content
 			if dict, you should pass arguments for discord.abc.Messageable.send
 		ephemeral: bool
 		disabled: bool
-		emoji: PartialEmoji
+		emoji: discord.PartialEmoji
 		url: str
 		"""
 		

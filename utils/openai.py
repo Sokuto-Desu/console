@@ -2,13 +2,13 @@ import openai, functools, settings
 
 from datetime import datetime
 from asyncio import get_running_loop
-from .db import Database
+from db import DetaBase
 
 
 class GPT:
 	def __init__(self, user_id: int, system_message: str=None):
 		openai.api_key = settings.openai_api_key
-		self.db = Database(base_name="AI")
+		self.db = DetaBase(base_name="AI")
 		
 		self.user_id = str(user_id)
 		self.messages = self.db.get(self.user_id, set_default=[None])

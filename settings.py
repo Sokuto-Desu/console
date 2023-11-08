@@ -1,36 +1,67 @@
-from dotenv import load_dotenv
-from os import getenv, listdir
-from sys import argv
-from utils import Database
+import discord
+import os
 
-settings_db = Database("settings")
+from discord.ext import commands
+
+from os import getenv
+from sys import argv
+from glob import glob
+from dotenv import load_dotenv
+
+from db import DetaBase
+
+"""
+TODO:
+DB caching
+Restructurization for utils/ and cogs/
+Finish custom commands
+"""
+
+settings_db = DetaBase("settings")
 load_dotenv()
 
-prefix = ["os.", "cmd.", "Os.", "Cmd.", "OS.", "CMd.", "CMD."]
-owners = settings_db.get("owners") or [898610134589243442]
-devserver = 942390181984608327
-activity = settings_db.get("activity") or "/help"
 token = getenv("TOKEN")
 test_token = getenv("TEST_TOKEN")
-
-is_test = False if not "-t" in argv else True
-errors_channel = settings_db.get("errors_channel") or 989094089305772042
 openai_api_key = getenv("OPENAI_API_KEY")
 
-if is_test:
-	prefix = "sudo."
+owners = list(map(
+	lambda id: int(id),
+	settings_db.get("owners") or [898610134589243442]
+))
+errors_channel = int(settings_db.get("errors_channel")) or 989094089305772042
+devserver = int(settings_db.get("devserver")) or 942390181984608327
+
+activity = discord.Activity(
+	type = discord.ActivityType.watching,
+	name = settings_db.get("activity") or "/help"
+)
+
+test_mode = False if not "-t" in argv else True
+default_prefix = "os."
 
 
-cogs = [
-	f"cogs.bridge.{file_name[:-3]}"
-	for file_name in listdir("./cogs/bridge")
-	if file_name[-3:] == ".py"
-]
-cogs_slash = [
-	f"cogs.slash.{file_name[:-3]}"
-	for file_name in listdir("./cogs/slash")
-	if file_name[-3:] == ".py"
-]
+async def get_guild_prefix(bot, message):
+	if test_mode:
+		return "sudo." # just in case, this does not affect anything other than prefix
+	
+	prefixes_db = DetaBase("prefixes")
+	
+	guild_id = str(message.guild.id)
+	
+	guild_prefix = prefixes_db.get(guild_id, set_default=default_prefix)
+	
+	return guild_prefix
+
+
+bridge_cogs = list(map(
+	lambda cog_path: cog_path.replace(os.path.sep, ".")[:-3],
+	glob("cogs/bridge/*.py", recursive=True)
+))
+
+slash_cogs = list(map(
+	lambda cog_path: cog_path.replace(os.path.sep, ".")[:-3],
+	glob("cogs/slash/*.py", recursive=True)
+))
 
 
 
@@ -76,11 +107,11 @@ echo_info = """
 
 [button styles](https://cdn.discordapp.com/attachments/954469674983256124/1003631816659456071/IMG_20220801_145427.jpg): 
 ```
-primary `/` blurple
-secondary `/` grey
-success `/` green
-danger `/` red
-link `/` url``` 
+primary / blurple
+secondary / grey
+success / green
+danger / red
+link / url``` 
 you can use any name provided here.
 
 [button example](https://cdn.discordapp.com/attachments/954469674983256124/1003633188268163213/IMG_20220801_145944.jpg): ```
