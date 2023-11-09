@@ -4,16 +4,20 @@ from settings import get_guild_prefix
 
 from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_group, BridgeExtCommand
-from discord import option
+from discord import option, default_permissions
 
 
-class CustomCommands(Cog):
+class CustomCommands(
+	Cog,
+	name="custom commands",
+	description="create your own custom prefix commands"
+):
 	def __init__(self, bot):
 		self.bot = bot
 		self.db = DetaBase(base_name="custom_exts")
 	
 	
-	@bridge_group()
+	@bridge_group(description="custom commands")
 	async def exts(self, ctx):
 		pass
 	
@@ -25,6 +29,7 @@ class CustomCommands(Cog):
 	)
 	@option("name", description="command's name", required=True)
 	@option("callback", description="command's callback (what to reply)", required=True)
+	@default_permissions(manage_messages=True)
 	async def _create(self, ctx, name: str, *, callback: str):
 		guild_id = str(ctx.guild.id)
 		custom_commands = self.db.get(guild_id, set_default=[])
@@ -40,7 +45,8 @@ class CustomCommands(Cog):
 			map(
 				lambda c: c.name,
 				filter(
-					lambda c: isinstance(c, BridgeExtCommand), # check if the command is ext command
+					# check if the command is ext command
+					lambda c: isinstance(c, BridgeExtCommand), 
 					self.bot.commands
 				)
 			)
@@ -70,6 +76,8 @@ class CustomCommands(Cog):
 		usage="os.exts delete >command_name",
 		brief="os.exts delete test"
 	)
+	@option("name", description="name of custom command", required=True)
+	@default_permissions(manage_messages=True)
 	async def _delete(self, ctx, name: str):
 		guild_id = str(ctx.guild.id)
 		custom_commands = self.db.get(guild_id, set_default=[])
@@ -97,16 +105,20 @@ class CustomCommands(Cog):
 		prefix = await self.bot.get_prefix(message)
 		
 		if message.content.startswith(prefix):
-			command_name = message.content.removeprefix(prefix) # remove prefix
-			command_name = command_name.split(" ", 1)[0] # remove everything after first space (getting command name)
+			# remove prefix
+			command_name = message.content.removeprefix(prefix) 
+			# remove everything after first space (getting command name)
+			command_name = command_name.split(" ", 1)[0] 
 			
 			guild_id = str(message.guild.id)
 			
 			custom_commands = self.db.get(guild_id)
-			command = tuple(filter(
+			command = filter(
 				lambda cmd: cmd.get("name") == command_name,
-				custom_commands
-			))[0] if custom_commands else None
+				custom_commands or [{}]
+			)
+			# slice is used to safely get an element and if the list is empty it wont throw an exception
+			command = tuple(command)[0:1]
 			
 			if cmd := command:
 				await message.channel.send(cmd.get("callback"))

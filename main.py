@@ -1,5 +1,5 @@
 import asyncio
-from core import ConsoleBot
+from core.bot import ConsoleBot
 
 def main():
 	bot = ConsoleBot()

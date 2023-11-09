@@ -6,12 +6,13 @@ from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_command
 
 
-class Owner(
+class Developer(
 	Cog,
+	name="developer",
 	command_attrs=dict(
 		hidden=True,
 		guild_ids=[devserver])
-	):
+):
 	def __init__(self, bot):
 		self.bot = bot
 	
@@ -34,8 +35,10 @@ class Owner(
 			await reply(ctx, f"```py\n{result}```")
 		
 		else:
-			tabbed_code = "\n\t\t".join(data.split("\n")) # splits data by lines and tabs them (so execute() will work)
-			formatted_code = tabbed_code.replace("dprint", "await ctx.send") # for convenience ¯\_(ツ)_/¯
+			# splits data by lines and tabs them (so execute() will work)
+			tabbed_code = "\n\t\t".join(data.split("\n")) 
+			# for convenience ¯\_(ツ)_/¯
+			formatted_code = tabbed_code.replace("dprint", "await ctx.send") 
 			
 			_globals = globals().update(
 				{
@@ -49,7 +52,8 @@ class Owner(
 			exec(
 				"async def execute():"
 				"\n\ttry:"
-				f"\n\t\t{formatted_code}" # tab at the beginning cause tabbed_code tabbed every line except first
+				# tab at the beginning cause tabbed_code tabbed every line except first
+				f"\n\t\t{formatted_code}" 
 				"\n\texcept Exception as e:"
 				"\n\t\tawait reply(ctx, get_traceback(e))"
 				"\nbot.loop.create_task(execute())",
@@ -65,4 +69,4 @@ class Owner(
 
 
 def setup(bot):
-	bot.add_cog(Owner(bot))
+	bot.add_cog(Developer(bot))

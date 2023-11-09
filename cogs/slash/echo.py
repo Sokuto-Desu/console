@@ -7,12 +7,17 @@ from discord.ext.commands import Cog, MissingPermissions, MessageNotFound
 from discord.ui import View
 
 
-class Echo(Cog):
+class Echo(
+	Cog,
+	name="echo",
+	description="/echo command. see /info echo for full info."
+):
 	def __init__(self, bot):
 		self.bot = bot
 	
 	
-	@slash_command(description='echo (/embed replacement). "/info echo" for more info')
+	# sorry for this one hell of "required=False, default=None"
+	@slash_command(description='say something as a bot. includes embed. "/info echo" for more info')
 	@option("content", description="any text",
 			required=False, default=None)
 	@option("title", description="any text",
@@ -40,12 +45,18 @@ class Echo(Cog):
 		
 		fields_list = []
 		if fields:
-			fields = fields.split("-add")[1:] # [1:] to remove empty string
+			# [1:] to remove empty string
+			fields = fields.split("-add")[1:] 
 			for field in fields:
-				field = field.split("//") # splits to [name, value]
+				# splits to [name, value]
+				field = field.split("//") 
 				fields_list.append(
-					{"name": field[0],
-					"value": field[1]})
+					{
+						"name": field[0],
+						"value": field[1],
+						"inline": False
+					}
+				)
 		
 		
 		if not any((title, description, footer, image, thumbnail, fields)):
@@ -55,15 +66,18 @@ class Echo(Cog):
 				color = Colour.from_rgb(
 					randint(0, 255), 
 					randint(0, 255), 
-					randint(0, 255)).value
+					randint(0, 255)
+				).value
 			else:
 				color = int(color, 16) 
 			
 			embed = make_embed(
+				ctx,
 				title=title,
 				description=description,
 				color=color,
 				footer=dict(text=footer),
+				no_default_footer=True,
 				image=dict(url=image),
 				thumbnail=dict(url=image),
 				fields=fields_list
@@ -73,28 +87,31 @@ class Echo(Cog):
 		if id:
 			if not ctx.author.guild_permissions.manage_messages:
 				raise MissingPermissions(["manage_messages"])
-			else:
-				try:
-					message = await ctx.channel.fetch_message(int(id))
-					await message.edit(content=content, embed=embed)
-					
-					await ctx.respond("`message succesfully edited.`", ephemeral=True)
-				except MessageNotFound:
-					await ctx.respond("`can't found message. check if this message exists in current channel.`", ephemeral=True)
-			return
+			
+			try:
+				message = await ctx.channel.fetch_message(int(id))
+				await message.edit(content=content, embed=embed)
+				
+				await ctx.respond("`message succesfully edited.`", ephemeral=True)
+			except MessageNotFound:
+				await ctx.respond("`can't found message. check if this message exists in current channel.`", ephemeral=True)
+			finally:
+				return
 		
 		view = None
 		if buttons:
 			buttons = buttons.split(";")
 			buttons_list = []
 			for button in buttons:
-				buttons_list.append(literal_eval(button)) # "{}" to {}
+				# literal_eval is "{}" to {}
+				buttons_list.append(literal_eval(button)) 
 			
 			view = View()
 			for button in make_buttons(buttons_list):
 				view.add_item(button)
 		
-		await ctx.respond("ᅠ", delete_after=0)
+		#await ctx.respond("ᅠ", delete_after=0)
+		await ctx.delete()
 		await ctx.send(content=content, embed=embed, view=view)
 
 

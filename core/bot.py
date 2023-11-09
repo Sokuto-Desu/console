@@ -5,8 +5,9 @@ from discord.ext import commands
 from discord.ext.bridge import Bot
 
 from sys import argv, exit
-from utils import handle_error
 from asyncio import sleep
+from utils import handle_error
+from .help import ConsoleHelpCommand
 
 
 class ConsoleBot(Bot):
@@ -16,6 +17,7 @@ class ConsoleBot(Bot):
 			intents = discord.Intents.all(),
 			activity = settings.activity,
 			owner_ids = settings.owners,
+			help_command = ConsoleHelpCommand(),
 			case_insensitive = True
 		)
 		

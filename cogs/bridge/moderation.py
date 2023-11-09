@@ -6,7 +6,11 @@ from discord.ext.commands import Cog, has_permissions, MemberConverter, command
 
 
 
-class Moderation(Cog):
+class Moderation(
+	Cog,
+	name="moderation",
+	description="moderate your server"
+):
 	def __init__(self, bot):
 		self.bot = bot
 	
@@ -21,14 +25,16 @@ class Moderation(Cog):
 				result = contains in message.content and result
 			
 			if not ctx.is_app:
-				result = result or message == ctx.message # clearing message of author
+				# clearing message of author
+				result = result or message == ctx.message 
 			
 			return result
 		
-		amount = amount + 1 if not ctx.is_app else amount # 1 is message of author
+		# 1 is the message of author
+		amount = amount + 1 if not ctx.is_app else amount 
 		
 		cleared = await ctx.channel.purge(limit=amount, check=clear_check)
-		cleared_amount = len(cleared) - 1 if not ctx.is_app else len(cleared) # 1 is message of author
+		cleared_amount = len(cleared) - 1 if not ctx.is_app else len(cleared)
 		
 		await reply(ctx, f"`successfully cleared {cleared_amount} messages.`", delete_after=1.5)
 	

@@ -13,13 +13,15 @@ class DetaBase:
 		self.collection = Deta(deta_key)
 		self.base_name = base_name
 		self.base = self.collection.Base(base_name)
-		self.cache_path = f"{getcwd()}{path.sep}db{path.sep}cache.json" # idfk why but open() refuses to work if i dont set full path to this file
+		# idfk why but open() refuses to work if i dont set full path to this file like THIS
+		self.cache_path = f"{getcwd()}{path.sep}db{path.sep}cache.json" 
 	
 	
 	def add_to_cache(self, key: str, value):
 		"Adds an element to cache (json file)"
 		with open(self.cache_path) as f:
-			cache_key = f"{self.base_name} {key}" # for deta base separation
+			# for deta base separation
+			cache_key = f"{self.base_name} {key}" 
 			cache_dict = json.load(f)
 			cache_dict[cache_key] = value
 		with open(self.cache_path, "w") as f:
@@ -29,7 +31,8 @@ class DetaBase:
 		"Gets a value from cache (json file)"
 		with open(self.cache_path) as f:
 			cache_key = f"{self.base_name} {key}"
-			if cached_value := json.load(f).get(cache_key): # .get() is a dict call
+			# .get() is a dict call
+			if cached_value := json.load(f).get(cache_key): 
 				return cached_value
 	
 	def delete_from_cache(self, key: str):
@@ -79,4 +82,5 @@ class DetaBase:
 		cache_key = f"{self.base_name} {key}"
 		self.delete_from_cache(cache_key)
 		
-		return True # deta's delete method always returns None so here it returns True
+		# deta's delete method always returns None so here it returns True
+		return True 

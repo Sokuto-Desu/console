@@ -1,25 +1,43 @@
 import discord
 import settings
 
-from utils import reply, DetaBase
+from utils import reply
+from db import DetaBase
 from settings import get_guild_prefix
 
 from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_group
 from discord import option
 
-class Prefix(Cog):
+class Prefix(
+	Cog,
+	name="prefix",
+	description="edit your server's prefix for this bot"
+):
 	def __init__(self, bot):
 		self.bot = bot
 		self.db = DetaBase("prefixes")
 	
 	
-	@bridge_group()
+	async def current_prefix_command(self, ctx):
+		current_prefix = ctx.prefix
+		await reply(ctx, 
+			f"""`my current prefix is "{current_prefix}"."""
+			f"""\nuse "{current_prefix}prefix set >new_prefix" to set new prefix.`"""
+		)
+	
+	@bridge_group(description="manage bot's prefix")
 	async def prefix(self, ctx):
 		if not ctx.invoked_subcommand:
-			current_prefix = ctx.prefix
-			await reply(ctx, f"""`my current prefix is "{current_prefix}".\nuse "{current_prefix}prefix set >new_prefix" to set new prefix.`""")
+			await self.current_prefix_command(ctx)
 	
+	@prefix.command(
+		description="show current prefix on this server",
+		usage="os.prefix current",
+		brief="os.prefix current"
+	)
+	async def current(self, ctx):
+		await self.current_prefix_command(ctx)
 	
 	@prefix.command(
 		name="set",

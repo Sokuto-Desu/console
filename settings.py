@@ -2,6 +2,7 @@ import discord
 import os
 
 from discord.ext import commands
+from discord.ext.bridge import Bot
 
 from os import getenv
 from sys import argv
@@ -40,9 +41,9 @@ test_mode = False if not "-t" in argv else True
 default_prefix = "os."
 
 
-async def get_guild_prefix(bot, message):
+async def get_guild_prefix(bot: Bot | None, message):
 	if test_mode:
-		return "sudo." # just in case, this does not affect anything other than prefix
+		return "sudo." 
 	
 	prefixes_db = DetaBase("prefixes")
 	
@@ -99,8 +100,8 @@ echo_info = """
 **buttons usage**: ```
 {"label": "button label (text)", 
 "style": "button style (see below; default is primary)", 
-"emoji": "button emoji (unicode emoji; you can skip this if you don't want the emoji in the button)",
-"disabled": "is button disabled (true/false; you can skip this if you need an enabled button)"
+"emoji": "button emoji (unicode emoji); you can skip this if you don't want the emoji in the button)",
+"disabled": "is button disabled (true/false); you can skip this if you need an enabled button)"
 "url": "use this if button style is "link" (url)", 
 "callback": "text that will be displayed after someone presses button (you can skip this if you don't need a callback)", 
 "ephemeral": "ephemeral callback message (true/false; you can skip this if you need an ephemeral callback message)"}; {button 2}; {button 3}; ...```

@@ -1,5 +1,5 @@
 import settings
-from utils import make_embed
+from utils import make_embed, reply
 
 from discord.ext.bridge import bridge_group
 from discord.ext.commands import Cog
@@ -10,21 +10,22 @@ class Info(Cog):
 		self.bot = bot
 	
 	
-	@bridge_group()
+	@bridge_group(description="info about something")
 	async def info(self, ctx):
 		pass
 	
 	@info.command(
-		description="echo info",
+		description="full info about /echo command",
 		usage=f"os.info echo"
 	)
 	async def echo(self, ctx):
 		embed = make_embed(
+			ctx,
 			title="/echo command info.",
 			description=settings.echo_info
 		)
 		
-		await ctx.respond(embed=embed)
+		await reply(ctx, embed=embed)
 
 
 def setup(bot):

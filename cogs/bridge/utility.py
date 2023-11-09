@@ -1,8 +1,8 @@
 import re
 import asyncio
+import random
 
-from utils import make_embed, GPT, reply
-from random import choice, randint
+from utils import make_embed, reply
 from base64 import b64decode, b64encode
 
 from discord.ext.commands import Cog
@@ -10,7 +10,11 @@ from discord.ext.bridge import bridge_command
 from discord import option, Member
 
 
-class Utility(Cog):
+class Utility(
+	Cog,
+	name="utilities",
+	description="small utilities for your server"
+):
 	def __init__(self, bot):
 		self.bot = bot
 	
@@ -25,10 +29,13 @@ class Utility(Cog):
 		member = member or ctx.author
 		
 		embed = make_embed(
-			title = f"`{member}'s avatar`",
-			image = {"url": member.avatar.url}
+			ctx,
+			title=f"`{member.name}'s avatar`",
+			image=dict(
+				url=member.avatar.url
+			)
 		)
-		await ctx.respond(embed = embed)
+		await ctx.respond(embed=embed)
 	
 	
 	@bridge_command(
@@ -41,13 +48,18 @@ class Utility(Cog):
 	async def random(self, ctx, *, data: str):
 		try:
 			number = int(data)
-			return await ctx.respond(f"`{randint(1, number)}`")
+			result = f"```\n{random.randint(1, number)}```"
 		except ValueError:
-			pass
+			choices = [c.strip() for c in data.split(",")]
+			result = f"```\n{random.choice(choices)}```"
 		
-		choices = [c.strip() for c in data.split(",")]
 		
-		await ctx.respond(f"`{choice(choices)}`")
+		embed = make_embed(
+			ctx,
+			description=result
+		)
+		
+		await ctx.respond(embed=embed)
 	
 	
 	@bridge_command(
@@ -63,7 +75,13 @@ class Utility(Cog):
 		result = b64encode(databytes) if mode == "encode" else b64decode(databytes)
 		result = result.decode("utf-8")
 		
-		await ctx.respond(f"`{result}`")
+		embed = make_embed(
+			ctx,
+			description=f"""```\n{mode}d "{data}"```"""
+		)
+		
+		# so that the result can be copied to clipboard
+		await ctx.respond(f"`{result}`", embed=embed)
 	
 	
 	@bridge_command(
@@ -72,9 +90,9 @@ class Utility(Cog):
 		usage="os.unicode >character/unicode >unicode or any symbol",
 		brief="os.unicode character 0097 // os.uni unicode a"
 	)
+	@option("data", description='example: 0097 or 97 (small letter "a") / • (U+2022)', required=True)
 	@option("get", required=True, choices=["character", "unicode"])
-	@option("data", description='example: 0097 or 97 (small letter "a") | • (U+2022)', required=True)
-	async def unicode(self, ctx, get: str, data: str):
+	async def unicode(self, ctx, data: str, get: str):
 		if get == "character":
 			numbers = re.search(r"(\d+)", data).group()
 			result = chr(int(numbers))
@@ -82,49 +100,12 @@ class Utility(Cog):
 			code = ord(data[0])
 			result = f"U+{code}"
 		
-		await ctx.respond(f"`{result}`")
-	
-	
-	@bridge_command(
-		aliases=["chatgpt", "chat"],
-		description=(
-			"talk to chatgpt (gpt-3.5). "
-			"note: if console doesn't answer for a long time just run command again."
-		),
-		usage="os.chatgpt >prompt",
-		brief="os.chatgpt Hello"
-	)
-	@option("prompt", required=True)
-	async def gpt(self, ctx, *, prompt: str):
-		message = await reply(ctx, content="`please wait a minute. prompt is processing.`")
+		embed = make_embed(
+			ctx,
+			description=f"```\n{data} {get}```"
+		)
 		
-		gpt35 = GPT(ctx.author.id)
-		
-		try:
-			completion = await asyncio.wait_for(gpt35.prompt(prompt), timeout=150)
-		except asyncio.TimeoutError:
-			return await message.edit("`sorry, there was an unknown error. try again later.`")
-		
-		# split the content to fit in the discord limit of characters
-		result = []
-		for i in range(0, len(completion), 1980):
-			result.append(completion[i:i+1980])
-		
-		await message.edit(f"`GPT-3.5`\n{result.pop(0)}")
-		for content in result:
-			await ctx.send(f"`{content}")
-	
-	@bridge_command(
-		aliases=["chatgpt-erase", "chat-erase", "erase_dialogue", "erase-chat", "erase-chatgpt", "erase-gpt", "erase_conversation", "ed"],
-		description="erase dialogue with gpt-3.5",
-		usage="os.gpt_erase_dialogue",
-		brief="os.ed"
-	)
-	async def gpt_erase_dialogue(self, ctx):
-		gpt35 = GPT(ctx.author.id)
-		await gpt35.erase_dialogue()
-		
-		await reply(ctx, "`dialogue erased.`")
+		await ctx.respond(f"`{result}`", embed=embed)
 
 
 def setup(bot):
