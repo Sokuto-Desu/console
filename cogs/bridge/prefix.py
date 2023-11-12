@@ -11,8 +11,8 @@ from discord import option
 
 class Prefix(
 	Cog,
-	name="prefix",
-	description="edit your server's prefix for this bot"
+	name="Prefix",
+	description="Edit your server's prefix for this bot"
 ):
 	def __init__(self, bot):
 		self.bot = bot
@@ -43,7 +43,7 @@ class Prefix(
 		name="set",
 		description="set new bot's prefix for this server",
 		usage="os.prefix set >new_prefix",
-		brief="os.prefix set cmd. // os.prefix set $"
+		brief="os.prefix set cmd.\nos.prefix set $"
 	)
 	@option("prefix", description="new prefix", required=True)
 	async def _set(self, ctx, prefix: str=None):

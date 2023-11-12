@@ -28,7 +28,7 @@ class Echo(
 			required=False, default=None)
 	@option("color", description="color of embed (hex, e.g. 0x151515)",
 			required=False, default=None)
-	@option("fields", description="-add field name // value -add field name // value",
+	@option("fields", description="-add field name\nvalue -add field name\nvalue",
 			required=False, default=None)
 	@option("image", description="url of embeds image",
 			required=False, default=None)

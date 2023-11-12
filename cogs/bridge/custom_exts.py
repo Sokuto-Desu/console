@@ -9,8 +9,8 @@ from discord import option, default_permissions
 
 class CustomCommands(
 	Cog,
-	name="custom commands",
-	description="create your own custom prefix commands"
+	name="Custom commands",
+	description="Create your own custom prefix commands"
 ):
 	def __init__(self, bot):
 		self.bot = bot

@@ -8,8 +8,8 @@ from discord.ext.commands import Cog, has_permissions, MemberConverter, command
 
 class Moderation(
 	Cog,
-	name="moderation",
-	description="moderate your server"
+	name="Moderation",
+	description="Moderate your server"
 ):
 	def __init__(self, bot):
 		self.bot = bot
@@ -40,16 +40,19 @@ class Moderation(
 	
 	
 	@command(
-		aliases=["clear", "purge", "c"],
+		aliases=["purge", "c"],
 		description="purge specific amount of messages in channel",
-		usage="os.clear r>amount n>user (id or mention) n>contains",
-		brief="os.c 50 @Console#3862 // os.c 50 N-word"
+		usage="os.clear >amount n>user (id or mention) >contains",
+		brief="os.c 50 <@927163003638546442>\nos.c 50 N-word"
 	)
 	@has_permissions(manage_messages=True)
-	async def _clear(self, ctx, amount: int=1, user: Optional[MemberConverter]=None, contains: str=None):
+	async def clear(self, ctx, amount: int=1, user: Optional[MemberConverter]=None, contains: str=None):
 		await self.clear_command(ctx, amount, user, contains)
 	
-	@slash_command(description="purge specific amount of messages in channel")
+	@slash_command(
+		name="clear",
+		description="purge specific amount of messages in channel"
+	)
 	@default_permissions(manage_messages=True)
 	@option("amount", description="amount of messages to clear",
 			required=True)
@@ -57,7 +60,7 @@ class Moderation(
 			required=False, default=None)
 	@option("contains", description="clear filter: message content",
 			required=False, default=None)
-	async def clear(self, ctx, amount: int, user: Member, contains: str):
+	async def _clear(self, ctx, amount: int, user: Member, contains: str):
 		await self.clear_command(ctx, amount, user, contains)
 
 

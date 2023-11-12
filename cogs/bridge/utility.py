@@ -12,8 +12,8 @@ from discord import option, Member
 
 class Utility(
 	Cog,
-	name="utilities",
-	description="small utilities for your server"
+	name="Utilities",
+	description="Small utilities for your server"
 ):
 	def __init__(self, bot):
 		self.bot = bot
@@ -22,7 +22,7 @@ class Utility(
 	@bridge_command(
 		description="get member avatar",
 		usage="os.avatar -member", 
-		brief="os.avatar @Console#3862"
+		brief="os.avatar <@927163003638546442>"
 	)
 	@option("member", required=False, default=None)
 	async def avatar(self, ctx, member: Member=None):
@@ -42,7 +42,7 @@ class Utility(
 		aliases=["r"],
 		description="random choice",
 		usage="os.random >number or choices",
-		brief="os.random yes, no, probably // os.random 10"
+		brief="os.random yes, no, probably\nos.random 10"
 	)
 	@option("data", description="choice1, choice2, choice3 ... (random choice) | any number (random number choice)", required=True)
 	async def random(self, ctx, *, data: str):
@@ -66,7 +66,7 @@ class Utility(
 		aliases=["b64", "64"],
 		description="base64 encode/decode",
 		usage="os.base64 >encode/decode >data",
-		brief="os.b64 encode Hello world! // os.64 decode SGVsbG8gd29ybGQh"
+		brief="os.b64 encode Hello world!\nos.64 decode SGVsbG8gd29ybGQh"
 	)
 	@option("mode", required=True, choices=["encode", "decode"])
 	@option("data", required=True)
@@ -88,7 +88,7 @@ class Utility(
 		aliases=["uni"],
 		description="character to unicode / unicode to character",
 		usage="os.unicode >character/unicode >unicode or any symbol",
-		brief="os.unicode character 0097 // os.uni unicode a"
+		brief="os.unicode character 0097\nos.uni unicode a"
 	)
 	@option("data", description='example: 0097 or 97 (small letter "a") / • (U+2022)', required=True)
 	@option("get", required=True, choices=["character", "unicode"])

@@ -18,7 +18,8 @@ class ConsoleBot(Bot):
 			activity = settings.activity,
 			owner_ids = settings.owners,
 			help_command = ConsoleHelpCommand(),
-			case_insensitive = True
+			case_insensitive = True,
+			strip_after_prefix = True
 		)
 		
 		self.is_test = settings.test_mode if not "-t" in argv else True
