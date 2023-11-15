@@ -32,9 +32,10 @@ class Prefix(
 			await self.current_prefix_command(ctx)
 	
 	@prefix.command(
+		aliases=["show"],
 		description="show current prefix on this server",
 		usage="os.prefix current",
-		brief="os.prefix current"
+		brief="os.prefix current // os.prefix show"
 	)
 	async def current(self, ctx):
 		await self.current_prefix_command(ctx)
@@ -59,7 +60,7 @@ class Prefix(
 		name="reset",
 		description="reset bot's prefix for this server",
 		usage="os.prefix reset",
-		brief=""
+		brief="os.prefix reset"
 	)
 	async def _reset(self, ctx):
 		guild_id = str(ctx.guild.id)

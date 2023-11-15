@@ -42,7 +42,7 @@ class Moderation(
 	@command(
 		aliases=["purge", "c"],
 		description="purge specific amount of messages in channel",
-		usage="os.clear >amount n>user (id or mention) >contains",
+		usage="os.clear >amount >user (id or mention) >contains",
 		brief="os.c 50 <@927163003638546442>\nos.c 50 N-word"
 	)
 	@has_permissions(manage_messages=True)

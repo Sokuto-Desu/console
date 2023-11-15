@@ -53,10 +53,15 @@ class ConsoleHelpCommand(HelpCommand):
 			)
 		)
 		
+		prefix = get_guild_prefix(ctx.bot, ctx)
+		
 		embed.add_field(name="Name", value=command.qualified_name)
+		if command.aliases:
+			aliases = ", ".join(command.aliases) if len(command.aliases) > 1 else command.aliases
+			embed.add_field(name="Aliases", value=aliases)
 		embed.add_field(name="Description", value=command.description)
-		embed.add_field(name="Usage", value=command.usage)
-		embed.add_field(name="Examples of usage", value=command.brief)
+		embed.add_field(name="Usage", value=command.usage.replace("os.", prefix))
+		embed.add_field(name="Examples of usage", value=command.brief.replace("os.", prefix))
 		
 		await ctx.send(embed=embed)
 
@@ -103,7 +108,7 @@ class HelpDropdown(Select):
 		
 		raw_cog = self.bot.cogs.get(choiced_cog)
 		
-		prefix = await get_guild_prefix(bot=None, message=interaction.channel)
+		prefix = await get_guild_prefix(self.bot, interaction.channel)
 		
 		commands_list = []
 		for command in raw_cog.walk_commands():

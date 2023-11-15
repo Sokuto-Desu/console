@@ -1,55 +1,67 @@
+import discord
+
 from db import DetaBase
 from asyncio import sleep
 from typing import Union
 
 from discord import option, TextChannel, ForumChannel, CategoryChannel, Thread, default_permissions
 from discord.ext.commands import Cog
-from discord.commands import SlashCommandGroup
+from discord.ext.bridge import bridge_group
 
-from utils import make_embed
+from utils import make_embed, reply
+from settings import get_guild_prefix
 
 
 class Filter(
 	Cog,
-	name="message filter",
-	description="delete messages containing bad/unwanted words after a given amount of time"
+	name="Message filter",
+	description="Delete messages containing bad/unwanted words after a given amount of time"
 ):
 	def __init__(self, bot):
 		self.bot = bot
-		self.filter_db = DetaBase("message_filter")
+		self.db = DetaBase("message_filter")
 	
 	
 	@Cog.listener()
 	async def on_message(self, message):
-		blacklist = self.filter_db.get(str(message.guild.id))
+		prefix = await get_guild_prefix(self.bot, message)
+		if message.author.bot or message.content.startswith(f"{prefix}filter"):
+			return
 		
-		if not blacklist or message.author.bot:
+		# do NOT unseparate these two if statements
+		blacklist = self.db.get(str(message.guild.id))
+		if not blacklist:
 			return
 		
 		# blacklist is a list of dicts
-		if blacklist != []: 
-			for word in blacklist:
-				if word["name"] in message.content.lower():
-					await sleep(word["wait"])
-					if channel := word["channel"]:
-						channel_id = int(channel)
-					else:
-						channel_id = None
-					
-					if (
-						# whole server or specific channel
-						not channel_id or channel_id == message.channel.id 
-						# covers  threads
-						or (isinstance(message.channel, Thread) and message.channel.parent.id == word["channel"]) 
-						# covers categories
-						or channel_id == message.channel.category.id
-					): 
-						await message.delete()
+		for word in blacklist:
+			if word["name"] in message.content.lower():
+				await sleep(word["wait"])
+				if channel := word["channel"]:
+					channel_id = int(channel)
+				else:
+					channel_id = None
+				
+				if (
+					# whole server or specific channel
+					not channel_id or channel_id == message.channel.id 
+					# covers  threads
+					or (isinstance(message.channel, Thread) and message.channel.parent.id == word["channel"]) 
+					# covers categories
+					or channel_id == message.channel.category.id
+				): 
+					await message.delete()
 	
 	
-	filter = SlashCommandGroup("filter", "filter words/symbols in chat")
+	@bridge_group(description="filter words/symbols in chat")
+	async def filter(self, ctx):
+		pass
 	
-	@filter.command(description="add words/symbols to filter blacklist")
+	@filter.command(
+		description="add words/symbols to filter blacklist",
+		usage="os.filter add >word >wait_before_delete_(in_seconds) >channel",
+		brief="os.filter add N-word // os.filter add bad_word 0 #general"
+	)
 	@option("word", description="word/symbol to be blacklisted",
 			required=True)
 	@option("wait", description="how long to wait before deleting message (in seconds)",
@@ -57,8 +69,15 @@ class Filter(
 	@option("channel", description="in which channel to delete messages (leave blank to apply to the entire server)",
 			required=False, default=None)
 	@default_permissions(manage_messages=True)
-	async def add(self, ctx, word: str, wait: float, channel: Union[TextChannel, Union[ForumChannel, CategoryChannel]]):
-		blacklist = self.filter_db.get(str(ctx.guild.id))
+	async def add(
+		self, 
+		ctx, 
+		word: str, 
+		wait: float=0, 
+		channel: Union[TextChannel, Union[ForumChannel, CategoryChannel]]=None
+	):
+		guild_id = str(ctx.guild.id)
+		blacklist = self.db.get(guild_id)
 		blacklist = [] if not blacklist else blacklist
 		element = {
 			"name": word,
@@ -69,26 +88,32 @@ class Filter(
 		if not element in blacklist:
 			blacklist.append(element)
 			
-			self.filter_db.set(key=str(ctx.guild.id), value=blacklist)
+			self.db.set(key=str(ctx.guild.id), value=blacklist)
 			
-			response = f"""`successfully added "{word}" to a blacklist.`"""
+			response = f"""successfully added "{word}" to a blacklist."""
 		else:
-			response = "`this word is already in a blacklist.`"
+			response = "this word is already in a blacklist."
 		
 		embed = make_embed(
 			ctx,
-			description="```\n{response}```"
+			description=f"```\n{response}```"
 		)
 		
-		await ctx.respond(embed=embed)
+		await reply(ctx, embed=embed)
 	
 	
-	@filter.command(description="remove words/symbols from filter blacklist")
+	@filter.command(
+		aliases=["delete"],
+		description="remove words/symbols from filter blacklist",
+		usage="os.filter remove >word",
+		brief="os.filter remove accidentally_added_word // os.filter remove foo"
+	)
 	@option("word", description="word/symbol to be removed from blacklist",
 			required=True)
 	@default_permissions(manage_messages=True)
 	async def remove(self, ctx, word: str):
-		blacklist = self.filter_db.get(str(ctx.guild.id))
+		guild_id = str(ctx.guild.id)
+		blacklist = self.db.get(guild_id)
 		if not blacklist:
 			response = "this word isn't in a blacklist."
 		else:
@@ -99,23 +124,28 @@ class Filter(
 			else:
 				blacklist.remove(element[0])
 				
-				self.filter_db.set(key=str(ctx.guild.id), value=blacklist)
+				self.db.set(key=str(ctx.guild.id), value=blacklist)
 				
 				response = f"""successfully removed "{word}" from a blacklist."""
 		
 		embed = make_embed(
 			ctx,
-			description="```\n{response}```"
+			description=f"```\n{response}```"
 		)
 		
-		await ctx.respond(embed=embed)
+		await reply(ctx, embed=embed)
 	
-	@filter.command(description="show filter blacklist")
+	@filter.command(
+		aliases=["show", "showall"],
+		description="show filter blacklist",
+		usage="os.filter list",
+		brief="os.filter show // os.filter showall"
+	)
 	@option("word", description="word/symbol to show info about",
 			required=False, default=None)
-	async def list(self, ctx, word: str):
+	async def list(self, ctx, word: str=None):
 		guild_id = str(ctx.guild.id)
-		blacklist = self.filter_db.get(guild_id)
+		blacklist = self.db.get(guild_id)
 		
 		if not blacklist:
 			response = "filter blacklist is empty."
@@ -144,10 +174,10 @@ class Filter(
 		
 		embed = make_embed(
 			ctx,
-			description="```\n{response}```"
+			description=f"```\n{response}```"
 		)
 		
-		await ctx.respond(embed=embed)
+		await reply(ctx, embed=embed)
 
 
 def setup(bot):
