@@ -113,15 +113,13 @@ class CustomCommands(
 			guild_id = str(message.guild.id)
 			
 			custom_commands = self.db.get(guild_id)
-			command = filter(
+			command = tuple(filter(
 				lambda cmd: cmd.get("name") == command_name,
 				custom_commands or [{}]
-			)
-			# slice is used to safely get an element and if the list is empty it wont throw an exception
-			command = tuple(command)[0:1]
+			))
 			
 			if cmd := command:
-				await message.channel.send(cmd.get("callback"))
+				await message.channel.send(cmd[0].get("callback"))
 
 
 def setup(bot):

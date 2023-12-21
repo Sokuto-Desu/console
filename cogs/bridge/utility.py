@@ -39,7 +39,7 @@ class Utility(
 	
 	
 	@bridge_command(
-		aliases=["r"],
+		aliases=["r", "rand"],
 		description="random choice",
 		usage="os.random >number or choices",
 		brief="os.random yes, no, probably\nos.random 10"
