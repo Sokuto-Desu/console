@@ -8,7 +8,11 @@ from utils import make_embed, reply
 from db import DetaBase
 from .assets import BioView
 
-class CustomBioEmbed(Cog):
+class CustomBioEmbed(
+	Cog,
+	name="Custom bio embeds",
+	description="Make your own personal embed that'llonly belong to you! (UNFINISHED)"
+):
 	def __init__(self, bot):
 		self.bot = bot
 		self.db = DetaBase("bio")
