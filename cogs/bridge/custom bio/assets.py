@@ -7,20 +7,20 @@ from db import DetaBase
 
 
 class BioView(View): 
-	def __init__(self, ctx):
+	def __init__(self, user):
 		super().__init__()
 		
-		self.ctx = ctx
+		self.user = user
 	
 	@button(
 		label="Edit",
 		style=ButtonStyle.green
 	)
 	async def callback(self, button, inter):
-		if not inter.user == self.ctx.author:
+		if not inter.user.id == self.user.id:
 			await inter.response.send_message("That ain't your bio bro", ephemeral=True)
 		
-		edit_view = EditBioView()
+		edit_view = EditBioView(self.user)
 		
 		await inter.response.edit_message(
 			embed=inter.message.embeds[0],
@@ -28,8 +28,10 @@ class BioView(View):
 		)
 
 class EditBioView(View):
-	def __init__(self):
+	def __init__(self, user):
 		super().__init__()
+		
+		self.user = user
 		
 		embed_attrs =  (
 			("Title", 1), 
@@ -41,6 +43,7 @@ class EditBioView(View):
 		for item, input_type in embed_attrs:
 			self.add_item(
 				EditButton(
+					user=self.user,
 					input_name=item,
 					embed_entry=item.lower(),
 					input_type=input_type,
@@ -54,11 +57,15 @@ class EditBioView(View):
 		style=ButtonStyle.red
 	)
 	async def finish_callback(self, button, inter):
-		await inter.response.edit_message(embed=inter.message.embeds[0], view=BioView())
+		if not inter.user.id == self.user.id:
+			await inter.response.send_message("That ain't your bio bro", ephemeral=True)
+		
+		await inter.response.edit_message(embed=inter.message.embeds[0], view=BioView(self.user))
 
 class BioModal(Modal):
 	def __init__(
 		self, 
+		user,
 		input_name: str="Title", 
 		embed_entry: str="title", 
 		input_type: int=1, 
@@ -69,6 +76,7 @@ class BioModal(Modal):
 		
 		self.embed_entry = embed_entry
 		self.db = DetaBase("bio")
+		self.user = user
 		
 		if input_type == 1:
 			self.add_item(InputText(label=input_name))
@@ -76,6 +84,9 @@ class BioModal(Modal):
 			self.add_item(InputText(label=input_name, style=InputTextStyle.long))
 	
 	async def callback(self, inter):
+		if not inter.user.id == self.user.id:
+			await inter.response.send_message("That ain't your bio bro", ephemeral=True)
+		
 		new_embed = inter.message.embeds[0].to_dict()
 		value = self.children[0].value
 		
@@ -92,12 +103,13 @@ class BioModal(Modal):
 			value=new_embed
 		)
 		
-		await inter.response.edit_message(embed=Embed.from_dict(new_embed), view=EditBioView())
+		await inter.response.edit_message(embed=Embed.from_dict(new_embed), view=EditBioView(self.user))
 
 
 class EditButton(Button):
 	def __init__(
 		self,
+		user,
 		input_name: str="Title",
 		embed_entry: str="title", 
 		input_type: int=1,
@@ -109,10 +121,15 @@ class EditButton(Button):
 		self.input_name = input_name
 		self.embed_entry = embed_entry
 		self.input_type = input_type
+		self.user = user
 	
 	async def callback(self, inter):
+		if not inter.user.id == self.user.id:
+			await inter.response.send_message("That ain't your bio bro", ephemeral=True)
+		
 		await inter.response.send_modal(
 			BioModal(
+				user=self.user,
 				input_name=self.input_name,
 				embed_entry=self.embed_entry,
 				input_type=self.input_type,

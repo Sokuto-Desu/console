@@ -27,7 +27,7 @@ class CustomBioEmbed(
 	async def bio(self, ctx, member: discord.Member=None):
 		if not member:
 			member = ctx.author
-			view = BioView(ctx)
+			view = BioView(member)
 		else:
 			view = None
 			if member.bot:
