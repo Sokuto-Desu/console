@@ -4,26 +4,23 @@ import os
 from discord.ext import commands
 from discord.ext.bridge import Bot
 
-from os import getenv
 from sys import argv
-from glob import glob
+from glob import iglob
 from dotenv import load_dotenv
 
 from db import DetaBase
 
 """
 TODO:
-DB caching
 Restructurization for utils/ and cogs/
-Finish custom commands
 """
 
 settings_db = DetaBase("settings")
 load_dotenv()
 
-token = getenv("TOKEN")
-test_token = getenv("TEST_TOKEN")
-openai_api_key = getenv("OPENAI_API_KEY")
+token = os.getenv("TOKEN")
+test_token = os.getenv("TEST_TOKEN")
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
 owners = list(map(
 	lambda id: int(id),
@@ -54,15 +51,17 @@ async def get_guild_prefix(bot: Bot | None, message):
 	return guild_prefix
 
 
-bridge_cogs = list(map(
-	lambda cog_path: cog_path.replace(os.path.sep, ".")[:-3],
-	glob("cogs/bridge/*.py", recursive=True)
-))
+bridge_cogs = [
+	file_path.replace(os.path.sep, ".")[:-3]
+	for file_path in iglob("cogs/bridge/**/*.py", recursive=True)
+	if not file_path.endswith("assets.py")
+]
 
-slash_cogs = list(map(
-	lambda cog_path: cog_path.replace(os.path.sep, ".")[:-3],
-	glob("cogs/slash/*.py", recursive=True)
-))
+slash_cogs = [
+	file_path.replace(os.path.sep, ".")[:-3]
+	for file_path in iglob("cogs/slash/**/*.py", recursive=True)
+	if not file_path.endswith("assets.py")
+]
 
 
 

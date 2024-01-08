@@ -6,6 +6,7 @@ from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_group, BridgeExtCommand
 from discord import option, default_permissions
 
+# see format.txt for how commands are stored in DB
 
 class CustomCommands(
 	Cog,
@@ -124,19 +125,3 @@ class CustomCommands(
 
 def setup(bot):
 	bot.add_cog(CustomCommands(bot))
-
-
-
-"""
-{ # db
-	"guild_id": [
-		{
-			"name": "command_a",
-			"callback": "callback_a"
-		},
-		{},
-		{},
-		...
-	]
-}
-"""

@@ -6,6 +6,7 @@ from discord.ext.bridge import Bot
 
 from sys import argv, exit
 from asyncio import sleep
+
 from utils import handle_error
 from .help import ConsoleHelpCommand
 

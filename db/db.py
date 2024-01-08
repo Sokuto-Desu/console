@@ -23,7 +23,8 @@ class DetaBase:
 			# for deta base separation
 			cache_key = f"{self.base_name} {key}" 
 			cache_dict = json.load(f)
-			cache_dict[cache_key] = value
+			cache_dict[cache_key] = value 
+		
 		with open(self.cache_path, "w") as f:
 			json.dump(cache_dict, f, skipkeys=True)
 	
@@ -40,30 +41,39 @@ class DetaBase:
 		with open(self.cache_path) as f:
 			cache_key = f"{self.base_name} {key}"
 			cache_dict = json.load(f)
-			cache_dict.pop(key)
+			try:
+				cache_dict.pop(cache_key)
+			except KeyError:
+				pass
+		
 		with open(self.cache_path, "w") as f:
 			json.dump(cache_dict, f, skipkeys=True)
 	
+	
 	def set(self, key: str, value):
 		"Sets a value in Deta Base and adds it to cache (json file), then returns the set value."
-		return_value = self.base.put(key=key, data=value).get("value")
+		if not isinstance(value, dict):
+			return_value = self.base.put(key=key, data=value).get("value")
+		else:
+			# Deta for some reason makes dictionaries a part of item and doesn't set it to item's "value"
+			corrected_value = {"value": value}
+			return_value = self.base.put(key=key, data=corrected_value)
+		
 		self.add_to_cache(key, value)
 		
 		return return_value
 	
-	
 	def get(self, key: str, set_default=None):
 		"""
-		Tries to get a value from cache (json file);
-		if failed, checks if set_default is not None or False and calls .set(), else ._get().
-		You always should use this unless you for some reason don't need caching and set_default at all.
+		Checks if a value is in cache (json file) and returns it.
+		On fail, sets the value to set_default if provided, and returns the value from Deta Base.
+		You always should use this and not _get(), unless you for some reason don't need caching and set_default at all.
 		"""
-		cached_value = self.get_from_cache(key)
-		
-		if cached_value:
+		if cached_value := self.get_from_cache(key):
 			return cached_value
 		
 		value = self._get(key=key)
+		
 		if value and not set_default:
 			return value
 		else:
@@ -79,8 +89,7 @@ class DetaBase:
 	def delete(self, key: str):
 		"Deletes a value from Deta Base and cache (json file), then returns True."
 		self.base.delete(key=key)
-		cache_key = f"{self.base_name} {key}"
-		self.delete_from_cache(cache_key)
+		self.delete_from_cache(key)
 		
 		# deta's delete method always returns None so here it returns True
 		return True 

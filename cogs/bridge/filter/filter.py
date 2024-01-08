@@ -37,17 +37,15 @@ class Filter(
 		for word in blacklist:
 			if word["name"] in message.content.lower():
 				await sleep(word["wait"])
+				
 				if channel := word["channel"]:
 					channel_id = int(channel)
 				else:
 					channel_id = None
 				
 				if (
-					# whole server or specific channel
 					not channel_id or channel_id == message.channel.id 
-					# covers  threads
 					or (isinstance(message.channel, Thread) and message.channel.parent.id == word["channel"]) 
-					# covers categories
 					or channel_id == message.channel.category.id
 				): 
 					await message.delete()

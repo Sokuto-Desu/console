@@ -1,4 +1,6 @@
-from utils import make_embed, make_buttons
+from .assets import make_buttons
+from utils import make_embed
+
 from ast import literal_eval
 from random import randint
 
