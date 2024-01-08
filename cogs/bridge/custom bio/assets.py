@@ -8,6 +8,8 @@ from db import DetaBase
 
 class BioView(View): 
 	def __init__(self, ctx):
+		super().__init__()
+		
 		self.ctx = ctx
 	
 	@button(
