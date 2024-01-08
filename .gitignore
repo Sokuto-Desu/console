@@ -3,3 +3,4 @@ old stuff/
 .dockerignore
 fly.toml
 Procfile
+.env
