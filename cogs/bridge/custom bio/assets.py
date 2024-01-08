@@ -6,13 +6,20 @@ from discord.ui import View, Button, button, Modal, InputText
 from db import DetaBase
 
 
-class BioView(View):
+class BioView(View): 
+	def __init__(self, ctx):
+		self.ctx = ctx
+	
 	@button(
 		label="Edit",
 		style=ButtonStyle.green
 	)
 	async def callback(self, button, inter):
+		if not inter.user == self.ctx.author:
+			await inter.response.send_message("That ain't your bio bro", ephemeral=True)
+		
 		edit_view = EditBioView()
+		
 		await inter.response.edit_message(
 			embed=inter.message.embeds[0],
 			view=edit_view
