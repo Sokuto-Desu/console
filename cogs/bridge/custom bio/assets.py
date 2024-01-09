@@ -111,14 +111,17 @@ class BioModal(Modal):
 		new_embed = inter.message.embeds[0].to_dict()
 		value = self.children[0].value
 		
-		if self.embed_entry.name == "color":
-			value = int(value, 16)
-		if self.embed_entry.name == "footer":
-			value = {"text": value}
-		if self.embed_entry.name in ("image", "thumbnail"):
-			value = {"url": value}
+		if value.lower() in ("none", "no", "empty", "gfy"):
+			value = None
 		
-		new_embed[self.embed_entry.name] = value
+		if self.embed_entry.name == "color":
+			result_value = int(value, 16)
+		if self.embed_entry.name == "footer":
+			result_value = {"text": value}
+		if self.embed_entry.name in ("image", "thumbnail"):
+			result_value = {"url": value}
+		
+		new_embed[self.embed_entry.name] = result_value
 		
 		self.db.set(
 			key=str(inter.user.id),
