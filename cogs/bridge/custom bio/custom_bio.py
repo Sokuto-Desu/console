@@ -11,7 +11,7 @@ from .assets import BioView
 class CustomBioEmbed(
 	Cog,
 	name="Custom bio embeds",
-	description="Make your own personal embed that'llonly belong to you! (UNFINISHED)"
+	description="Make your own personal embed that'll only belong to you! (UNFINISHED)"
 ):
 	def __init__(self, bot):
 		self.bot = bot

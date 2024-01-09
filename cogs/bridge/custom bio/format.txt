@@ -1,5 +1,11 @@
 {
-	"user id": {
-		
+	"user_id": {
+		"title": ...,
+		"description": ...,
+		"footer": {
+			"text": ...
+		},
+		"color": 0x000000,
+		...
 	}
 }
