@@ -114,6 +114,7 @@ class BioModal(Modal):
 		if value.lower() in ("none", "no", "empty", "gfy"):
 			value = None
 		
+		result_value = value
 		if self.embed_entry.name == "color":
 			result_value = int(value, 16)
 		if self.embed_entry.name == "footer":
