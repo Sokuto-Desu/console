@@ -53,7 +53,7 @@ class ConsoleHelpCommand(HelpCommand):
 			)
 		)
 		
-		prefix = get_guild_prefix(ctx.bot, ctx)
+		prefix = await get_guild_prefix(ctx.bot, ctx)
 		
 		embed.add_field(name="Name", value=command.qualified_name)
 		if command.aliases:
