@@ -1,6 +1,6 @@
 from utils import reply
 from db import DetaBase
-from core.assets import get_guild_prefix
+from settings import get_guild_prefix
 
 from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_group, BridgeExtCommand
@@ -39,14 +39,14 @@ class CustomCommands(
 			filter(
 				lambda cmd: cmd.get("name") == name,
 				custom_commands
-			
+			)
 		) if custom_commands else False
 		
 		bot_command_names = tuple(
 			map(
 				lambda c: c.name,
 				filter(
-					# check if the command is ext commanddd
+					# check if the command is ext command
 					lambda c: isinstance(c, BridgeExtCommand), 
 					self.bot.commands
 				)

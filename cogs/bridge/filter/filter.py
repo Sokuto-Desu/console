@@ -9,7 +9,7 @@ from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_group
 
 from utils import make_embed, reply
-from core.assets import get_guild_prefix
+from settings import get_guild_prefix
 
 
 class Filter(

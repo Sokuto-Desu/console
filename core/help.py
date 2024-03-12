@@ -1,14 +1,14 @@
 import discord
 
+from utils import make_embed
+from settings import get_guild_prefix
+
+from inspect import getfile
+
 from discord import SelectOption, ComponentType
 from discord.ui import Select, View
 from discord.ext.commands import HelpCommand, Command
 from discord.ext.bridge import BridgeExtCommand, BridgeCommandGroup
-
-from inspect import getfile
-
-from utils import make_embed
-from .assets import get_guild_prefix
 
 
 class ConsoleHelpCommand(HelpCommand):
@@ -53,7 +53,7 @@ class ConsoleHelpCommand(HelpCommand):
 			)
 		)
 		
-		prefix = await get_guild_prefix(ctx.bot, ctx)
+		prefix = get_guild_prefix(ctx.bot, ctx)
 		
 		embed.add_field(name="Name", value=command.qualified_name)
 		if command.aliases:
