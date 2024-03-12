@@ -7,14 +7,14 @@ from discord.ext.bridge import Bot
 from sys import argv, exit
 from asyncio import sleep
 
-from utils import handle_error
 from .help import ConsoleHelpCommand
+from .assets import handle_error, get_guild_prefix
 
 
 class ConsoleBot(Bot):
 	def __init__(self):
 		super().__init__(
-			command_prefix = settings.get_guild_prefix,
+			command_prefix = get_guild_prefix,
 			intents = discord.Intents.all(),
 			activity = settings.activity,
 			owner_ids = settings.owners,
@@ -35,7 +35,6 @@ class ConsoleBot(Bot):
 	
 	async def on_command_error(self, ctx, error) -> None:
 		await handle_error(self, ctx, error)
-	
 	
 	async def on_connect(self) -> None:
 		if "-s" in argv:

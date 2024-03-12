@@ -1,13 +1,13 @@
 import discord
-import settings
-
-from utils import reply
-from db import DetaBase
-from settings import get_guild_prefix
 
 from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_group
 from discord import option
+
+from utils import reply
+from db import DetaBase
+from core.assets import get_guild_prefix
+
 
 class Prefix(
 	Cog,
@@ -67,8 +67,6 @@ class Prefix(
 		self.db.delete(guild_id)
 		
 		await reply(ctx, "`successfully reset bot's prefix.`")
-	
-	
 
 
 def setup(bot):

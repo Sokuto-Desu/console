@@ -106,6 +106,9 @@ class Utility(
 		)
 		
 		await ctx.respond(f"`{result}`", embed=embed)
+	
+	
+	
 
 
 def setup(bot):

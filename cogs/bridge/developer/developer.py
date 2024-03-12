@@ -1,9 +1,10 @@
-from settings import devserver
-from utils import reply, get_traceback
-
 from discord import option
 from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_command
+
+from settings import devserver
+from utils import reply
+from core.assets import get_traceback
 
 
 class Developer(
@@ -11,7 +12,8 @@ class Developer(
 	name="developer",
 	command_attrs=dict(
 		hidden=True,
-		guild_ids=[devserver])
+		guild_ids=[devserver]
+	)
 ):
 	def __init__(self, bot):
 		self.bot = bot

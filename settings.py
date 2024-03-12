@@ -4,15 +4,16 @@ import os
 from discord.ext import commands
 from discord.ext.bridge import Bot
 
+from db import DetaBase
+
 from sys import argv
 from glob import iglob
 from dotenv import load_dotenv
 
-from db import DetaBase
 
 """
 TODO:
-Restructurization for utils/ and cogs/
+Restructurization for utils/
 """
 
 settings_db = DetaBase("settings")
@@ -22,10 +23,12 @@ token = os.getenv("TOKEN")
 test_token = os.getenv("TEST_TOKEN")
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
-owners = list(map(
-	lambda id: int(id),
-	settings_db.get("owners") or [898610134589243442]
-))
+owners = list(
+	map(
+		lambda id: int(id),
+		settings_db.get("owners") or [898610134589243442]
+	)
+)
 errors_channel = int(settings_db.get("errors_channel")) or 989094089305772042
 devserver = int(settings_db.get("devserver")) or 942390181984608327
 
@@ -36,19 +39,6 @@ activity = discord.Activity(
 
 test_mode = False if not "-t" in argv else True
 default_prefix = "os."
-
-
-async def get_guild_prefix(bot: Bot | None, message):
-	if test_mode:
-		return "sudo." 
-	
-	prefixes_db = DetaBase("prefixes")
-	
-	guild_id = str(message.guild.id)
-	
-	guild_prefix = prefixes_db.get(guild_id, set_default=default_prefix)
-	
-	return guild_prefix
 
 
 bridge_cogs = [
