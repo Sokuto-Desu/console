@@ -3,8 +3,8 @@ from db import DetaBase
 from settings import get_guild_prefix
 
 from discord.ext.commands import Cog
-from discord.ext.bridge import bridge_group, BridgeExtCommand
-from discord import option, default_permissions
+from discord.ext.bridge import bridge_group, BridgeExtCommand, bridge_option
+from discord import default_permissions
 
 # see format.txt for how commands are stored in DB
 
@@ -28,8 +28,8 @@ class CustomCommands(
 		usage="os.exts create >command_name >command callback",
 		brief="os.exts create test Hello World!"
 	)
-	@option("name", description="command's name", required=True)
-	@option("callback", description="command's callback (what to reply)", required=True)
+	@bridge_option("name", description="command's name", required=True)
+	@bridge_option("callback", description="command's callback (what to reply)", required=True)
 	@default_permissions(manage_messages=True)
 	async def _create(self, ctx, name: str, *, callback: str):
 		guild_id = str(ctx.guild.id)
@@ -77,7 +77,7 @@ class CustomCommands(
 		usage="os.exts delete >command_name",
 		brief="os.exts delete test"
 	)
-	@option("name", description="name of custom command", required=True)
+	@bridge_option("name", description="name of custom command", required=True)
 	@default_permissions(manage_messages=True)
 	async def _delete(self, ctx, name: str):
 		guild_id = str(ctx.guild.id)

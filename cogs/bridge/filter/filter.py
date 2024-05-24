@@ -4,9 +4,9 @@ from db import DetaBase
 from asyncio import sleep
 from typing import Union
 
-from discord import option, TextChannel, ForumChannel, CategoryChannel, Thread, default_permissions
+from discord import TextChannel, ForumChannel, CategoryChannel, Thread, default_permissions
 from discord.ext.commands import Cog
-from discord.ext.bridge import bridge_group
+from discord.ext.bridge import bridge_group, bridge_option
 
 from utils import make_embed, reply
 from settings import get_guild_prefix
@@ -60,11 +60,11 @@ class Filter(
 		usage="os.filter add >word >wait_before_delete_(in_seconds) >channel",
 		brief="os.filter add N-word // os.filter add bad_word 0 #general"
 	)
-	@option("word", description="word/symbol to be blacklisted",
+	@bridge_option("word", description="word/symbol to be blacklisted",
 			required=True)
-	@option("wait", description="how long to wait before deleting message (in seconds)",
+	@bridge_option("wait", description="how long to wait before deleting message (in seconds)",
 			required=False, default=0)
-	@option("channel", description="in which channel to delete messages (leave blank to apply to the entire server)",
+	@bridge_option("channel", description="in which channel to delete messages (leave blank to apply to the entire server)",
 			required=False, default=None)
 	@default_permissions(manage_messages=True)
 	async def add(
@@ -83,7 +83,7 @@ class Filter(
 			"channel": str(channel.id) if channel else None
 		}
 		
-		if not element in blacklist:
+		if element not in blacklist:
 			blacklist.append(element)
 			
 			self.db.set(key=str(ctx.guild.id), value=blacklist)
@@ -106,7 +106,7 @@ class Filter(
 		usage="os.filter remove >word",
 		brief="os.filter remove accidentally_added_word // os.filter remove foo"
 	)
-	@option("word", description="word/symbol to be removed from blacklist",
+	@bridge_option("word", description="word/symbol to be removed from blacklist",
 			required=True)
 	@default_permissions(manage_messages=True)
 	async def remove(self, ctx, word: str):
@@ -139,7 +139,7 @@ class Filter(
 		usage="os.filter list",
 		brief="os.filter show // os.filter showall"
 	)
-	@option("word", description="word/symbol to show info about",
+	@bridge_option("word", description="word/symbol to show info about",
 			required=False, default=None)
 	async def list(self, ctx, word: str=None):
 		guild_id = str(ctx.guild.id)
@@ -155,7 +155,7 @@ class Filter(
 			response = f"message filter blacklist:\n{result}"
 		
 		else:
-			element = discord.utils.find(lambda item: item.get("name") == word, blscklist)
+			element = discord.utils.find(lambda item: item.get("name") == word, blacklist)
 			if not element:
 				response = "this word isn't in blacklist."
 			else:

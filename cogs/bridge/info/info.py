@@ -1,7 +1,7 @@
 import settings
 from utils import make_embed, reply
 
-from discord.ext.bridge import bridge_group
+from discord.ext.bridge import bridge_group, bridge_option
 from discord.ext.commands import Cog
 
 
@@ -16,7 +16,7 @@ class Info(Cog):
 	
 	@info.command(
 		description="full info about /echo command",
-		usage=f"os.info echo"
+		usage="os.info echo"
 	)
 	async def echo(self, ctx):
 		embed = make_embed(

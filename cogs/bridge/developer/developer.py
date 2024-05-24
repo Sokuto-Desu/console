@@ -1,9 +1,8 @@
 from settings import devserver
 from utils import reply, get_traceback
 
-from discord import option
 from discord.ext.commands import Cog
-from discord.ext.bridge import bridge_command
+from discord.ext.bridge import bridge_command, bridge_option
 
 
 class Developer(
@@ -21,8 +20,8 @@ class Developer(
 	
 	
 	@bridge_command(aliases=["code"])
-	@option("mode", required=True, choices=["eval", "exec"])
-	@option("data", required=True)
+	@bridge_option("mode", required=True, choices=["eval", "exec"])
+	@bridge_option("data", required=True)
 	async def run(self, ctx, mode: str, *, data: str):
 		if mode == "eval":
 			try:

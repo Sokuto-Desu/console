@@ -1,7 +1,7 @@
 import discord
 
 from discord import Embed
-from discord.ext.bridge import bridge_command
+from discord.ext.bridge import bridge_command, bridge_option
 from discord.ext.commands import Cog
 
 from utils import make_embed, reply

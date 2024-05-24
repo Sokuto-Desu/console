@@ -6,8 +6,7 @@ from db import DetaBase
 from settings import get_guild_prefix
 
 from discord.ext.commands import Cog
-from discord.ext.bridge import bridge_group
-from discord import option
+from discord.ext.bridge import bridge_group, bridge_option
 
 class Prefix(
 	Cog,
@@ -46,7 +45,7 @@ class Prefix(
 		usage="os.prefix set >new_prefix",
 		brief="os.prefix set cmd.\nos.prefix set $"
 	)
-	@option("prefix", description="new prefix", required=True)
+	@bridge_option("prefix", description="new prefix", required=True)
 	async def _set(self, ctx, prefix: str=None):
 		if not prefix:
 			return await reply(ctx, "`please properly provide the prefix.`")

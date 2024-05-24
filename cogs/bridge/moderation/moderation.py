@@ -1,9 +1,9 @@
 from typing import Optional
 from utils import reply
 
-from discord import option, Member, slash_command, ApplicationContext, default_permissions
+from discord import Member, slash_command, ApplicationContext, default_permissions
 from discord.ext.commands import Cog, has_permissions, MemberConverter, command
-
+from discord.ext.bridge import bridge_option
 
 
 class Moderation(
@@ -54,11 +54,11 @@ class Moderation(
 		description="purge specific amount of messages in channel"
 	)
 	@default_permissions(manage_messages=True)
-	@option("amount", description="amount of messages to clear",
+	@bridge_option("amount", description="amount of messages to clear",
 			required=True)
-	@option("user", description="clear filter: user",
+	@bridge_option("user", description="clear filter: user",
 			required=False, default=None)
-	@option("contains", description="clear filter: message content",
+	@bridge_option("contains", description="clear filter: message content",
 			required=False, default=None)
 	async def _clear(self, ctx, amount: int, user: Member, contains: str):
 		await self.clear_command(ctx, amount, user, contains)
