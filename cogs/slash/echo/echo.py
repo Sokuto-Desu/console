@@ -8,7 +8,7 @@ class Echo(
 	name="echo"
 ):
 	def __init__(self, bot):
-		self.bot = bot 
+		self.bot = bot
 	
 	@slash_command(
 		name="echo"
