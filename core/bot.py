@@ -1,20 +1,18 @@
-import discord, os
+import discord
 
-from discord.ext import commands
 from discord.ext.bridge import Bot
 
-from . import config
+from common import config
 
-from sys import argv
-from dotenv import load_dotenv
+from . import handling
 
-load_dotenv()
 
 class BotClass(Bot):
 	def __init__(self):
 		super().__init__(
-			command_prefix = "os.",
+			command_prefix = config.get_guild_prefix,
 			intents = discord.Intents.all(),
+			activity = config.activity,
 			case_insensitive = True,
 			strip_after_prefix = True
 		)
@@ -27,11 +25,17 @@ class BotClass(Bot):
 			except discord.errors.ExtensionNotFound:
 				continue
 	
+	async def on_application_command_error(self, ctx, error):
+		await handling.handle_error(self, ctx, error)
+	
+	async def on_command_error(self, ctx, error):
+		await handling.handle_error(self, ctx, error)
+	
 	async def on_ready(self):
 		print(f"logged in.\nuser: {self.user}")
 	
 	def run(self):
-		if "-t" in argv:
+		if config.test_mode:
 			super().run(config.test_token)
 		else:
 			super().run(config.token)

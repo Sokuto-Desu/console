@@ -3,7 +3,7 @@ import discord
 from discord.ext.commands import Cog
 from discord.ext.bridge import bridge_command, bridge_group
 
-from core.formatters import make_embed
+from common.formatters import make_embed, reply
 
 class Autodelete(
 	Cog,
